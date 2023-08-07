@@ -1,5 +1,4 @@
 import pygame
-beeeeep
 from random import randint
 pygame.init()
 master = True
