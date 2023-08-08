@@ -1,5 +1,4 @@
 import pygame
-hnnhjjknkj
 from random import randint
 pygame.init()
 master = True
@@ -43,8 +42,8 @@ p3points = 0
 p4points = 0
 winpoints = 0
 
-def text(text, a, b, si, col):
-    font= pygame.font.SysFont("arial",si)
+def text(text, a, b, si, col, font):
+    font= pygame.font.SysFont(font,si)
     texting = font.render(text, True, col)
     canvas.blit(texting, (a,b))
 
@@ -54,6 +53,7 @@ pj2 = juump(1, 10, False)
 pj3 = juump(1, 10, False)
 pj4 = juump(1, 10, False)
 
+black_bar = pygame.Rect(0,0,1500,120)
 startrect = pygame.Rect(1200,800,200,100)
 exitrect = pygame.Rect(200,750,150,150)
 menurect = pygame.Rect(675,750,150,150)
@@ -65,6 +65,7 @@ pointselect50 = pygame.Rect(200,800,100,100)
 pointselect100 = pygame.Rect(400,800,100,100)
 pointselect150 = pygame.Rect(600,800,100,100)
 pointselect200 = pygame.Rect(800,800,100,100)
+pointselectRnd = pygame.Rect(1000,800,100,100)
        
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
@@ -196,11 +197,12 @@ def resetorangei():
     global orangei2
     global orangei3
     global orangei4
+    global orangei5
     orangei1 = orange
     orangei2 = orange
     orangei3 = orange
     orangei4 = orange
-
+    orangei5 = orange
 
 isplay1 = 0
 isplay2 = 0
@@ -219,8 +221,8 @@ while master:
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
-        if mouse:
-            if playrect.collidepoint(mousepos):
+        if mouse or keys[pygame.K_RETURN]:
+            if playrect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                     Open_ui = False
                     page = False
         if keys[pygame.K_q] and keys[pygame.K_p]:
@@ -231,6 +233,7 @@ while master:
         pygame.display.update() 
     while not Open_ui:
         canvas.fill(black)
+        text(f"Win points = {winpoints}", 500, 100, 100, white, "arial")
         can_start = isplay1%2 + isplay2%2 + isplay3%2 + isplay4%2
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
@@ -249,7 +252,9 @@ while master:
         draw(startplayer2img, start_player2)
         draw(startplayer3img, start_player3)
         draw(startplayer4img, start_player4)
-        if winpoints == 50:
+        if winpoints == 0:
+            resetorangei()
+        elif winpoints == 50:
             resetorangei()
             orangei1 = green
         elif winpoints == 100:
@@ -263,14 +268,17 @@ while master:
             orangei4 = green
         else:
             resetorangei()
+            orangei5 = green
         pygame.draw.rect(canvas, orangei1, pointselect50)
         pygame.draw.rect(canvas, orangei2, pointselect100)
         pygame.draw.rect(canvas, orangei3, pointselect150)
         pygame.draw.rect(canvas, orangei4, pointselect200)
-        text("50", 225, 825, 50, black)
-        text("100", 412.5, 825, 50, black)
-        text("150", 612.5, 825, 50, black)
-        text("200", 812.5, 825, 50, black)
+        pygame.draw.rect(canvas, orangei5, pointselectRnd)
+        text("50", 225, 825, 50, black, "arial")
+        text("100", 412.5, 825, 50, black, "arial")
+        text("150", 612.5, 825, 50, black, "arial")
+        text("200", 812.5, 825, 50, black, "arial")
+        text("Rnd", 1012.5, 825, 50, black, "arial")
         if mouse:
             if start_player1.collidepoint(mousepos):
                 isplay1 += 1
@@ -296,6 +304,24 @@ while master:
             if pointselect200.collidepoint(mousepos):
                 winpoints = 200
                 pygame.time.delay(100)
+            if pointselectRnd.collidepoint(mousepos):
+                winpoints = randint(50, 200)
+                pygame.time.delay(100)
+        if  keys[pygame.K_5]:
+            winpoints = 50
+            pygame.time.delay(100)
+        if keys[pygame.K_6]:
+            winpoints = 100
+            pygame.time.delay(100)
+        if keys[pygame.K_7]:
+            winpoints = 150
+            pygame.time.delay(100)
+        if keys[pygame.K_8]:
+            winpoints = 200
+            pygame.time.delay(100)
+        if keys[pygame.K_9]:
+            winpoints = randint(50, 200)
+            pygame.time.delay(100)
         if keys[pygame.K_0]:
             isplay1 += 1
             isplay2 += 1
@@ -315,21 +341,21 @@ while master:
             isplay4 += 1
             pygame.time.delay(200)
         if isplay1%2:
-            text("Player 1 is playing",200,350,50,green)
+            text("Player 1 is playing",200,350,50,green, "arial")
         else:
-            text("Player 1 is not playing",200,350,50,red)
+            text("Player 1 is not playing",200,350,50,red, "arial")
         if isplay2%2:
-            text("Player 2 is playing",1050,350,50,green)
+            text("Player 2 is playing",1050,350,50,green, "arial")
         else:
-            text("Player 2 is not playing",1050,350,50,red)
+            text("Player 2 is not playing",1050,350,50,red, "arial")
         if isplay3%2:
-            text("Player 3 is playing",200,650,50,green)
+            text("Player 3 is playing",200,650,50,green, "arial")
         else:
-            text("Player 3 is not playing",200,650,50,red)
+            text("Player 3 is not playing",200,650,50,red, "arial")
         if isplay4%2:
-            text("Player 4 is playing",1050,650,50,green)
+            text("Player 4 is playing",1050,650,50,green, "arial")
         else:
-            text("Player 4 is not playing",1050,650,50,red)
+            text("Player 4 is not playing",1050,650,50,red, "arial")
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -354,15 +380,6 @@ while master:
         draw(banana3.picture, Banana_rect3)
         draw(banana4.picture, Banana_rect4)
         draw(banana5.picture, Banana_rect5)
-        if isplay1%2:
-            text(str(p1points),100,20,150,white)
-        if isplay2%2:
-            text(str(p2points),1300,20,150,white)
-        if isplay3%2:
-            text(str(p3points),100,170,150,white)
-        if isplay4%2:
-            text(str(p4points),1300,170,150,white)
-
         Banana_rect1.y += banana1.initfallspeed
         Banana_rect2.y += banana2.initfallspeed
         Banana_rect3.y += banana3.initfallspeed
@@ -637,6 +654,16 @@ while master:
             exit = True
             winning = True
         draw(grass, grassrect)
+        pygame.draw.rect(canvas, black, black_bar)
+        if isplay1%2:
+            text("Player 1: "+str(p1points),40,60,60,white, "Jungle Adventurer")
+        if isplay2%2:
+            text("Player 2: "+str(p2points),300,60,60,white, "Jungle Adventurer")
+        if isplay3%2:
+            text("Player 3: "+str(p3points),950,60,60,white, "Jungle Adventurer")
+        if isplay4%2:
+            text("Player 4: "+str(p4points),1200,60,60,white, "Jungle Adventurer")
+        text("Goal: "+str(winpoints),600,50,100,white,"Jungle Adventurer")
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         player1.clamp_ip(canvas_rect)
@@ -651,7 +678,7 @@ while master:
 
     while winning:
         canvas.fill(yellow)
-        text(f"{winner} is Full",200,300,200,black)
+        text(f"{winner} is Full",200,300,200,black, "arial")
         draw(exiticon, exitrect)
         draw(menu, menurect)
         draw(playagain, playagainrect)
@@ -681,6 +708,7 @@ while master:
                 Banana_rect3.y = 0
                 Banana_rect4.y = 0
                 Banana_rect5.y = 0
+                winpoints = 0
             if playagainrect.collidepoint(mousepos):
                 winning = False
                 exit = False
@@ -712,7 +740,7 @@ while master:
                     rowe += f"{board[colum][row]}|"
                 print(rowe)
         def check(x,winner):
-            global win
+            global T_win
             di_win1 = 0
             di_win2 = 0
             if board[1][1] == x:
