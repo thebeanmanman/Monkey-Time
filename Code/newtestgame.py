@@ -1,5 +1,6 @@
 import pygame
 from random import randint
+final test please
 pygame.init()
 master = True
 page = True
