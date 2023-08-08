@@ -1,6 +1,5 @@
 import pygame
 from random import randint
-hello = True
 pygame.init()
 master = True
 page = True
