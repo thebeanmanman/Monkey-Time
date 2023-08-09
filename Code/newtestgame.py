@@ -5,6 +5,7 @@ master = True
 page = True
 exit = True
 Open_ui = True
+winning = False
 Tic_Tac_Toe = False
 canvas = pygame.display.set_mode((1500, 1000))
 canvas_rect = canvas.get_rect()
@@ -223,7 +224,7 @@ while master:
         mousepos = pygame.mouse.get_pos()
         if mouse or keys[pygame.K_RETURN]:
             if playrect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    Open_ui = False
+                    Tic_Tac_Toe = True
                     page = False
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
@@ -728,23 +729,15 @@ while master:
             pygame.quit()
         pygame.display.update()
         clock.tick(600)
-
     while Tic_Tac_Toe:
         canvas.fill(black)
         pygame.draw.rect(canvas, white, (250,0,1000,1000))
         pygame.draw.rect(canvas, black, (250,300,1000,50))
         pygame.draw.rect(canvas, black, (250,650,1000,50))
-        pygame.draw.rect(canvas, black, (500,0,50,1000))
-        pygame.draw.rect(canvas, black, (850,0,50,1000))
+        pygame.draw.rect(canvas, black, (550,0,50,1000))
+        pygame.draw.rect(canvas, black, (900,0,50,1000))
         board = [[" "," ", " "],[" "," "," "],[" "," "," "]]
         T_win = False
-        def display_board():
-            print(" |1|2|3|")
-            for colum in range(len(board)):
-                rowe = f"{colum+1}|"
-                for row in range(len(board)):
-                    rowe += f"{board[colum][row]}|"
-                print(rowe)
         def check(x,winner):
             global T_win
             di_win1 = 0
@@ -777,7 +770,6 @@ while master:
                         for delete in range(len(available)):
                             available.remove(available[0])
                         return winner
-        display_board()
         available = ["1,1","1,2","1,3","2,1","2,2","2,3","3,1","3,2","3,3"]
         playing = True
         turn = randint(0,1)
@@ -785,18 +777,24 @@ while master:
             if len(available):
                 if turn%2:
                     choosing = True
-                    choice = input("Your Turn")
+                    choice = ("Your Turn")
                     while choosing:
                         if choice in available:
                             available.remove(choice)
                             choosing = False
-                            break
                         else:
-                            choice = input("Please enter a valid choice")
+                            choice = ("Please enter a valid choice")
+                        keys = pygame.key.get_pressed()
+                        if keys[pygame.K_q] and keys[pygame.K_p]:
+                            pygame.quit()
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                        pygame.display.update()
+                        clock.tick(600)
                     choice = choice.split(",")
                     board[int (choice[1])-1][int(choice[0])-1] = "X"
                     turn += 1
-                    display_board()
                     winner = check("X", "Win")
                 else:
                     if len(available):
@@ -805,11 +803,29 @@ while master:
                         choice = choice.split(",")
                         board[int(choice[1])-1][int(choice[0])-1] = "O"
                         turn += 1
-                        display_board()
                         winner = check("O", "Lose")
             else:
                 playing = False
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_q] and keys[pygame.K_p]:
+                pygame.quit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            pygame.display.update()
+            clock.tick(600)
+
         if T_win:
-            print(f"You {winner}")
+            pass
+            #print(f"You {winner}")
         else: 
-            print("It's a draw")
+            pass
+            #print("It's a draw")
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_q] and keys[pygame.K_p]:
+            pygame.quit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update()
+        clock.tick(600)
