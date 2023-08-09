@@ -204,6 +204,16 @@ def resetorangei():
     orangei3 = orange
     orangei4 = orange
     orangei5 = orange
+    
+T_11 = pygame.Rect(250,0,300,300)
+T_12 = pygame.Rect(250,0,300,300)
+T_13 = pygame.Rect(250,0,300,300)
+T_21 = pygame.Rect(250,0,300,300)
+T_22 = pygame.Rect(250,0,300,300)
+T_23 = pygame.Rect(250,0,300,300)
+T_31 = pygame.Rect(250,0,300,300)
+T_32 = pygame.Rect(250,0,300,300)
+T_33 = pygame.Rect(250,0,300,300)
 
 isplay1 = 0
 isplay2 = 0
@@ -224,7 +234,7 @@ while master:
         mousepos = pygame.mouse.get_pos()
         if mouse or keys[pygame.K_RETURN]:
             if playrect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    Tic_Tac_Toe = True
+                    Open_ui = False
                     page = False
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
@@ -736,6 +746,8 @@ while master:
         pygame.draw.rect(canvas, black, (250,650,1000,50))
         pygame.draw.rect(canvas, black, (550,0,50,1000))
         pygame.draw.rect(canvas, black, (900,0,50,1000))
+        mouse = pygame.mouse.get_pressed()[0]
+        mousepos = pygame.mouse.get_pos()
         board = [[" "," ", " "],[" "," "," "],[" "," "," "]]
         T_win = False
         def check(x,winner):
@@ -777,13 +789,30 @@ while master:
             if len(available):
                 if turn%2:
                     choosing = True
-                    choice = ("Your Turn")
                     while choosing:
+                        if mouse:
+                            choice = 0
+                            if T_11.collidepoint(mousepos):
+                                choice = "1,1"
+                            if T_12.collidepoint(mousepos):
+                                choice = "1,2"
+                            if T_13.collidepoint(mousepos):
+                                choice = "1,3"
+                            if T_21.collidepoint(mousepos):
+                                choice = "2,1"
+                            if T_22.collidepoint(mousepos):
+                                choice = "2,2"
+                            if T_23.collidepoint(mousepos):
+                                choice = "2,3"
+                            if T_31.collidepoint(mousepos):
+                                choice = "3,1"
+                            if T_32.collidepoint(mousepos):
+                                choice = "3,2"
+                            if T_33.collidepoint(mousepos):
+                                choice = "3,3"
                         if choice in available:
                             available.remove(choice)
                             choosing = False
-                        else:
-                            choice = ("Please enter a valid choice")
                         keys = pygame.key.get_pressed()
                         if keys[pygame.K_q] and keys[pygame.K_p]:
                             pygame.quit()
@@ -829,3 +858,4 @@ while master:
                 pygame.quit()
         pygame.display.update()
         clock.tick(600)
+
