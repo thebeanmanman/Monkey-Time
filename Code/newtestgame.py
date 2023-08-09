@@ -1,6 +1,7 @@
 import pygame
 from random import randint
 pygame.init()
+commitkeytest
 master = True
 page = True
 exit = True
