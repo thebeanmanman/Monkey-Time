@@ -730,7 +730,13 @@ while master:
         clock.tick(600)
 
     while Tic_Tac_Toe:
-        board = [[" "," ", " "],[" ", " ", " "],[" "," "," "]]
+        canvas.fill(black)
+        pygame.draw.rect(canvas, white, (250,0,1000,1000))
+        pygame.draw.rect(canvas, black, (250,300,1000,50))
+        pygame.draw.rect(canvas, black, (250,650,1000,50))
+        pygame.draw.rect(canvas, black, (500,0,50,1000))
+        pygame.draw.rect(canvas, black, (850,0,50,1000))
+        board = [[" "," ", " "],[" "," "," "],[" "," "," "]]
         T_win = False
         def display_board():
             print(" |1|2|3|")
