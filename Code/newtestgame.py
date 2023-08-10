@@ -750,6 +750,20 @@ while master:
         mousepos = pygame.mouse.get_pos()
         board = [[" "," ", " "],[" "," "," "],[" "," "," "]]
         T_win = False
+        def edit_T_board(who,placement1,placement2):
+            if placement1 == 1:
+                ab = 250
+            if placement1 == 2:
+                ab = 600
+            if placement1 == 3:
+                ab = 950
+            if placement2 == 1:
+                ba = 0
+            if placement2 == 2:
+                ba = 350
+            if placement2 == 3:
+                ba = 700
+            text(who, ab, ba, 300, black, "arial")
         def check(x,winner):
             global T_win
             di_win1 = 0
@@ -822,6 +836,7 @@ while master:
                         pygame.display.update()
                         clock.tick(600)
                     choice = choice.split(",")
+                    edit_T_board("X",choice[0],choice[1])
                     board[int (choice[1])-1][int(choice[0])-1] = "X"
                     turn += 1
                     winner = check("X", "Win")
