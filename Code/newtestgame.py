@@ -234,8 +234,9 @@ while master:
         mousepos = pygame.mouse.get_pos()
         if mouse or keys[pygame.K_RETURN]:
             if playrect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    Open_ui = False
+                    #Open_ui = False
                     page = False
+                    Tic_Tac_Toe = True
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -740,7 +741,7 @@ while master:
         pygame.display.update()
         clock.tick(600)
     while Tic_Tac_Toe:
-        canvas.fill(black)
+        canvas.fill(white)
         pygame.draw.rect(canvas, white, (250,0,1000,1000))
         pygame.draw.rect(canvas, black, (250,300,1000,50))
         pygame.draw.rect(canvas, black, (250,650,1000,50))
