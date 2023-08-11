@@ -62,6 +62,7 @@ playagainrect = pygame.Rect(1150,750,150,150)
 playrect = pygame.Rect(600,350,300,300)
 settingsrect = pygame.Rect(100,750,150,150)
 skinrect = pygame.Rect(1250,750,150,150)
+gamerect = pygame.Rect(350,425,150,150)
 pointselect50 = pygame.Rect(200,800,100,100)
 pointselect100 = pygame.Rect(400,800,100,100)
 pointselect150 = pygame.Rect(600,800,100,100)
@@ -105,6 +106,7 @@ try:
     bluee = pygame.transform.scale(bluee, (180,180))
     skin = pygame.image.load("skin.png")
     settings = pygame.image.load("settings.png")
+    gamebutton = pygame.image.load("gameicon.png")
     def draw(img, pos):
         return canvas.blit(img, pos)
 except FileNotFoundError:
@@ -129,6 +131,7 @@ except FileNotFoundError:
     bluee = light_green
     skin = yellow
     settings = "grey"
+    gamebutton = black
     primary = False
     def draw(img, rect):
         return pygame.draw.rect(canvas, img, rect)
@@ -230,6 +233,7 @@ while master:
     while page:
         canvas.fill(lightblue)
         draw(playbutton, playrect)
+        draw(gamebutton, gamerect)
         if primary:
             draw(skin, skinrect)
         #draw(settings, settingsrect)
@@ -240,6 +244,10 @@ while master:
             if playrect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                     Open_ui = False
                     page = False
+        if mouse:
+            if gamerect.collidepoint(mousepos):
+                page = False
+                Tic_Tac_Toe = True
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
