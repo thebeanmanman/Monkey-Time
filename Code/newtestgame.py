@@ -4,9 +4,12 @@ pygame.init()
 master = True
 page = True
 exit = True
+skin_selection = False
 Open_ui = True
 winning = False
 Tic_Tac_Toe = False
+
+
 canvas = pygame.display.set_mode((1500, 1000))
 canvas_rect = canvas.get_rect()
 clock = pygame.time.Clock()
@@ -248,12 +251,31 @@ while master:
             if gamerect.collidepoint(mousepos):
                 page = False
                 Tic_Tac_Toe = True
+        if mouse:
+            if skinrect.collidepoint(mousepos):
+                page = False
+                skin_selection = True
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
         pygame.display.update() 
+
+    while skin_selection:
+        canvas.fill(white)
+        keys = pygame.key.get_pressed()
+        mouse = pygame.mouse.get_pressed()[0]
+        mousepos = pygame.mouse.get_pos()
+        draw(menuicon, menurect)
+        
+        if keys[pygame.K_q] and keys[pygame.K_p]:
+            pygame.quit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update() 
+
     while not Open_ui:
         canvas.fill(black)
         text(f"Win points = {winpoints}", 500, 100, 100, white, "arial")
