@@ -216,6 +216,8 @@ T_23 = pygame.Rect(600,700,300,300)
 T_31 = pygame.Rect(950,0,300,300)
 T_32 = pygame.Rect(950,350,300,300)
 T_33 = pygame.Rect(950,700,300,300)
+T_exitrect = pygame.Rect(1300,750,300,300)
+T_menurect = pygame.Rect(50,750,300,300)
 
 isplay1 = 0
 isplay2 = 0
@@ -236,9 +238,8 @@ while master:
         mousepos = pygame.mouse.get_pos()
         if mouse or keys[pygame.K_RETURN]:
             if playrect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    #Open_ui = False
+                    Open_ui = False
                     page = False
-                    Tic_Tac_Toe = True
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -744,13 +745,17 @@ while master:
         clock.tick(600)
     while Tic_Tac_Toe:
         pygame.time.delay(100)
+        T_break = False
         canvas.fill(white)
         pygame.draw.rect(canvas, white, (250,0,1000,1000))
         pygame.draw.rect(canvas, black, (250,300,1000,50))
         pygame.draw.rect(canvas, black, (250,650,1000,50))
         pygame.draw.rect(canvas, black, (550,0,50,1000))
         pygame.draw.rect(canvas, black, (900,0,50,1000))
+        draw(exiticon, T_exitrect)
+        draw(menu, T_menurect)
         text(str(T_p1score), 125,125,125,black,"Jungle Adventurer")
+        text(str(T_p2score), 1375,125,125,black,"Jungle Adventurer")
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
         board = [[" "," ", " "],[" "," "," "],[" "," "," "]]
@@ -839,6 +844,16 @@ while master:
                                 choice = "3,2"
                             if T_33.collidepoint(mousepos):
                                 choice = "3,3"
+                            if T_exitrect.collidepoint(mousepos):
+                                pygame.quit()
+                            if T_menurect.collidepoint(mousepos):
+                                page = True
+                                Tic_Tac_Toe = False
+                                choosing = False
+                                playing = False
+                                T_break = True
+                                T_p1score = 0
+                                T_p2score = 0
                         if choice in available:
                             available.remove(choice)
                             choosing = False
@@ -850,11 +865,12 @@ while master:
                                 pygame.quit()
                         pygame.display.update()
                         clock.tick(600)
-                    choice = choice.split(",")
-                    edit_T_board("X",choice[0],choice[1])
-                    board[int (choice[1])-1][int(choice[0])-1] = "X"
-                    turn += 1
-                    winner = check("X", "Win")
+                    if not T_break:
+                        choice = choice.split(",")
+                        edit_T_board("X",choice[0],choice[1])
+                        board[int (choice[1])-1][int(choice[0])-1] = "X"
+                        turn += 1
+                        winner = check("X", "Win")
                 else:
                     if len(available):
                         choice = available[randint(0,len(available)-1)]
