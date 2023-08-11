@@ -204,16 +204,18 @@ def resetorangei():
     orangei3 = orange
     orangei4 = orange
     orangei5 = orange
-    
+
+T_p1score = 0
+T_p2score = 0
 T_11 = pygame.Rect(250,0,300,300)
-T_12 = pygame.Rect(250,0,300,300)
-T_13 = pygame.Rect(250,0,300,300)
-T_21 = pygame.Rect(250,0,300,300)
-T_22 = pygame.Rect(250,0,300,300)
-T_23 = pygame.Rect(250,0,300,300)
-T_31 = pygame.Rect(250,0,300,300)
-T_32 = pygame.Rect(250,0,300,300)
-T_33 = pygame.Rect(250,0,300,300)
+T_12 = pygame.Rect(250,350,300,300)
+T_13 = pygame.Rect(250,700,300,300)
+T_21 = pygame.Rect(600,0,300,300)
+T_22 = pygame.Rect(600,350,300,300)
+T_23 = pygame.Rect(600,700,300,300)
+T_31 = pygame.Rect(950,0,300,300)
+T_32 = pygame.Rect(950,350,300,300)
+T_33 = pygame.Rect(950,700,300,300)
 
 isplay1 = 0
 isplay2 = 0
@@ -741,30 +743,39 @@ while master:
         pygame.display.update()
         clock.tick(600)
     while Tic_Tac_Toe:
+        pygame.time.delay(100)
         canvas.fill(white)
         pygame.draw.rect(canvas, white, (250,0,1000,1000))
         pygame.draw.rect(canvas, black, (250,300,1000,50))
         pygame.draw.rect(canvas, black, (250,650,1000,50))
         pygame.draw.rect(canvas, black, (550,0,50,1000))
         pygame.draw.rect(canvas, black, (900,0,50,1000))
+        text(str(T_p1score), 125,125,125,black,"Jungle Adventurer")
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
         board = [[" "," ", " "],[" "," "," "],[" "," "," "]]
         T_win = False
-        def edit_T_board(who,placement1,placement2):
-            if placement1 == 1:
-                ab = 250
-            if placement1 == 2:
-                ab = 600
-            if placement1 == 3:
-                ab = 950
-            if placement2 == 1:
-                ba = 0
-            if placement2 == 2:
-                ba = 350
-            if placement2 == 3:
-                ba = 700
-            text(who, ab, ba, 300, black, "arial")
+        def edit_T_board(who,placement1,placement2): 
+            if placement1 == "1":
+                ab = 325
+            if placement1 == "2":
+                ab = 675
+            if placement1 == "3":
+                ab = 1025
+            if placement2 == "1":
+                ba = 100
+            if placement2 == "2":
+                ba = 425
+            if placement2 == "3":
+                ba = 750
+            if primary:
+                if who == "X":
+                    T_img = player1img
+                else:
+                    T_img = player2img
+                canvas.blit(T_img, (ab,ba))
+            else:
+                text(who, (ab-25), (ba-100), 300, black, "arial")
         def check(x,winner):
             global T_win
             di_win1 = 0
@@ -801,10 +812,13 @@ while master:
         playing = True
         turn = randint(0,1)
         while playing:
+            pygame.time.delay(100)
             if len(available):
                 if turn%2:
                     choosing = True
                     while choosing:
+                        mouse = pygame.mouse.get_pressed()[0]
+                        mousepos = pygame.mouse.get_pos()
                         if mouse:
                             choice = 0
                             if T_11.collidepoint(mousepos):
@@ -838,7 +852,6 @@ while master:
                         clock.tick(600)
                     choice = choice.split(",")
                     edit_T_board("X",choice[0],choice[1])
-                    print("j")
                     board[int (choice[1])-1][int(choice[0])-1] = "X"
                     turn += 1
                     winner = check("X", "Win")
@@ -848,6 +861,7 @@ while master:
                         available.remove(choice)
                         choice = choice.split(",")
                         board[int(choice[1])-1][int(choice[0])-1] = "O"
+                        edit_T_board("O",choice[0],choice[1])
                         turn += 1
                         winner = check("O", "Lose")
             else:
@@ -862,11 +876,12 @@ while master:
             clock.tick(600)
 
         if T_win:
-            pass
-            #print(f"You {winner}")
+            if winner == "Win":
+                T_p1score += 1
+            else:
+                T_p2score += 1
         else: 
             pass
-            #print("It's a draw")
         keys = pygame.key.get_pressed()
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
