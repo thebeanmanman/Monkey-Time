@@ -838,6 +838,7 @@ while master:
                         clock.tick(600)
                     choice = choice.split(",")
                     edit_T_board("X",choice[0],choice[1])
+                    print("j")
                     board[int (choice[1])-1][int(choice[0])-1] = "X"
                     turn += 1
                     winner = check("X", "Win")
