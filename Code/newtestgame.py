@@ -97,10 +97,6 @@ try:
     player2img = pygame.image.load("monkeman1.png")
     player3img = pygame.image.load("monkey3.png")
     player4img = pygame.image.load("monkey4.png")
-    startplayer1img = pygame.image.load("monkeman21.png")
-    startplayer2img = pygame.image.load("monkeman1.png")
-    startplayer3img = pygame.image.load("monkey3.png")
-    startplayer4img = pygame.image.load("monkey4.png")
     yellowe = pygame.image.load("banan.png")
     yellowe = pygame.transform.scale(yellowe, (180,180))
     blacke = pygame.image.load("brownbanan.png")
@@ -251,10 +247,11 @@ while master:
             if gamerect.collidepoint(mousepos):
                 page = False
                 Tic_Tac_Toe = True
-        if mouse:
-            if skinrect.collidepoint(mousepos):
-                page = False
-                skin_selection = True
+        if primary:
+            if mouse:
+                if skinrect.collidepoint(mousepos):
+                    page = False
+                    skin_selection = True
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -267,8 +264,11 @@ while master:
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
-        draw(menuicon, menurect)
-        
+        draw(menu, menurect)
+        if mouse:
+            if menurect.collidepoint(mousepos):
+                page = True
+                skin_selection = False
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -293,10 +293,10 @@ while master:
                 exit = False
                 Open_ui = True
         keys = pygame.key.get_pressed()
-        draw(startplayer1img, start_player1)
-        draw(startplayer2img, start_player2)
-        draw(startplayer3img, start_player3)
-        draw(startplayer4img, start_player4)
+        draw(player1img, start_player1)
+        draw(player2img, start_player2)
+        draw(player3img, start_player3)
+        draw(player4img, start_player4)
         if winpoints == 0:
             resetorangei()
         elif winpoints == 50:
@@ -386,21 +386,21 @@ while master:
             isplay4 += 1
             pygame.time.delay(200)
         if isplay1%2:
-            text("Player 1 is playing",200,350,50,green, "arial")
+            text("Player 1 is playing",100,350,50,green, "arial")
         else:
-            text("Player 1 is not playing",200,350,50,red, "arial")
+            text("Player 1 is not playing",100,350,50,red, "arial")
         if isplay2%2:
-            text("Player 2 is playing",1050,350,50,green, "arial")
+            text("Player 2 is playing",950,350,50,green, "arial")
         else:
-            text("Player 2 is not playing",1050,350,50,red, "arial")
+            text("Player 2 is not playing",950,350,50,red, "arial")
         if isplay3%2:
-            text("Player 3 is playing",200,650,50,green, "arial")
+            text("Player 3 is playing",100,650,50,green, "arial")
         else:
-            text("Player 3 is not playing",200,650,50,red, "arial")
+            text("Player 3 is not playing",100,650,50,red, "arial")
         if isplay4%2:
-            text("Player 4 is playing",1050,650,50,green, "arial")
+            text("Player 4 is playing",950,650,50,green, "arial")
         else:
-            text("Player 4 is not playing",1050,650,50,red, "arial")
+            text("Player 4 is not playing",950,650,50,red, "arial")
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
