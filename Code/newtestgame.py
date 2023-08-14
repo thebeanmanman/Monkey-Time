@@ -72,6 +72,17 @@ pointselect150 = pygame.Rect(600,800,100,100)
 pointselect200 = pygame.Rect(800,800,100,100)
 pointselectRnd = pygame.Rect(1000,800,100,100)
        
+monkeyskin = pygame.Rect(250, 250, 150, 150)
+frogskin = pygame.Rect(500, 250, 150, 150)
+swskin = pygame.Rect(750, 250, 150, 150)
+primeskin = pygame.Rect(1000, 250, 150, 150)
+
+def Skin(sken):
+    global player1img
+    global player2img
+    global player3img
+    global player4img
+
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
 player3 = pygame.Rect(875, deck, 150, 147)
@@ -80,6 +91,7 @@ start_player1 = pygame.Rect(200, 200, 150, 147)
 start_player2 = pygame.Rect(1050, 200, 150, 147)
 start_player3 = pygame.Rect(200, 500, 150, 147)
 start_player4 = pygame.Rect(1050, 500, 150, 147)
+backrect = pygame.Rect(75,75,100,100)
 primary = True
 
 
@@ -106,6 +118,7 @@ try:
     skin = pygame.image.load("skin.png")
     settings = pygame.image.load("settings.png")
     gamebutton = pygame.image.load("gameicon.png")
+    backarrow = pygame.image.load("Arrow.png")
     def draw(img, pos):
         return canvas.blit(img, pos)
 except FileNotFoundError:
@@ -264,6 +277,15 @@ while master:
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
+        text("Skin Selection", 250, 50, 200, black, "jungle adventurer")
+        draw(player1img, monkeyskin)
+        text("Monkey", 250, 400, 50, black, "jungle adventurer")
+        draw(player2img, frogskin)
+        text("Frog", 500, 400, 50, black, "jungle adventurer")
+        draw(player3img, swskin)
+        text("Star Wars", 750, 400, 50, black, "jungle adventurer")
+        draw(player4img, primeskin)
+        text("Waldon", 1000, 400, 50, black, "jungle adventurer")
         draw(menu, menurect)
         if mouse:
             if menurect.collidepoint(mousepos):
@@ -297,6 +319,7 @@ while master:
         draw(player2img, start_player2)
         draw(player3img, start_player3)
         draw(player4img, start_player4)
+        draw(backarrow, backrect)
         if winpoints == 0:
             resetorangei()
         elif winpoints == 50:
@@ -352,6 +375,9 @@ while master:
             if pointselectRnd.collidepoint(mousepos):
                 winpoints = randint(50, 200)
                 pygame.time.delay(100)
+            if backrect.collidepoint(mousepos):
+                page = True
+                Open_ui = True
         if  keys[pygame.K_5]:
             winpoints = 50
             pygame.time.delay(100)
