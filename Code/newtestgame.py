@@ -101,6 +101,9 @@ def Skin(sken):
         yellowe = pygame.image.load("banan.png")
         blacke = pygame.image.load("brownbanan.png")
         bluee = pygame.image.load("greenbanan.png")
+        
+monkeyselect = pygame.image.load("monkeman21.png")
+frogselect = pygame.image.load("frog1.png")
 
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
@@ -288,9 +291,9 @@ while master:
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
         text("Skin Selection", 250, 50, 200, black, "jungle adventurer")
-        draw(player1img, monkeyskin)
+        draw(monkeyselect, monkeyskin)
         text("Monkey", 250, 400, 50, black, "jungle adventurer")
-        draw(player2img, frogskin)
+        draw(frogselect, frogskin)
         text("Frog", 500, 400, 50, black, "jungle adventurer")
         draw(player3img, swskin)
         text("Star Wars", 750, 400, 50, black, "jungle adventurer")
@@ -298,6 +301,10 @@ while master:
         text("Waldon", 1000, 400, 50, black, "jungle adventurer")
         draw(menu, menurect)
         if mouse:
+            if monkeyskin.collidepoint(mousepos):
+                Skin(menkey)
+            if frogskin.collidepoint(mousepos):
+                Skin(freg)
             if menurect.collidepoint(mousepos):
                 page = True
                 skin_selection = False
