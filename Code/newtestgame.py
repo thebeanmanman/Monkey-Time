@@ -82,6 +82,25 @@ def Skin(sken):
     global player2img
     global player3img
     global player4img
+    global yellowe
+    global blacke
+    global bluee
+    if sken == menkey:
+        player1img = pygame.image.load("monkeman21.png")
+        player2img = pygame.image.load("monkeman1.png")
+        player3img = pygame.image.load("monkey3.png")
+        player4img = pygame.image.load("monkey4.png")
+        yellowe = pygame.image.load("banan.png")
+        blacke = pygame.image.load("brownbanan.png")
+        bluee = pygame.image.load("greenbanan.png")
+    elif sken == freg:
+        player1img = pygame.image.load("frog1.png")
+        player2img = pygame.image.load("frog2.png")
+        player3img = pygame.image.load("frog3.png")
+        player4img = pygame.image.load("frog4.png")
+        yellowe = pygame.image.load("banan.png")
+        blacke = pygame.image.load("brownbanan.png")
+        bluee = pygame.image.load("greenbanan.png")
 
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
@@ -105,13 +124,7 @@ try:
     menu = pygame.image.load("menu.png")
     playagain = pygame.image.load("playagain.png")
     playbutton = pygame.image.load("playbutton.png")
-    player1img = pygame.image.load("monkeman21.png")
-    player2img = pygame.image.load("monkeman1.png")
-    player3img = pygame.image.load("monkey3.png")
-    player4img = pygame.image.load("monkey4.png")
-    yellowe = pygame.image.load("banan.png")
-    blacke = pygame.image.load("brownbanan.png")
-    bluee = pygame.image.load("greenbanan.png")
+    Skin(menkey)
     skin = pygame.image.load("skin.png")
     settings = pygame.image.load("settings.png")
     gamebutton = pygame.image.load("gameicon.png")
