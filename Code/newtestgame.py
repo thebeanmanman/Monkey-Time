@@ -85,7 +85,7 @@ def Skin(sken):
     global yellowe
     global blacke
     global bluee
-    if sken == menkey:
+    if sken == "menkey":
         player1img = pygame.image.load("monkeman21.png")
         player2img = pygame.image.load("monkeman1.png")
         player3img = pygame.image.load("monkey3.png")
@@ -93,7 +93,7 @@ def Skin(sken):
         yellowe = pygame.image.load("banan.png")
         blacke = pygame.image.load("brownbanan.png")
         bluee = pygame.image.load("greenbanan.png")
-    elif sken == freg:
+    elif sken == "freg":
         player1img = pygame.image.load("frog1.png")
         player2img = pygame.image.load("frog2.png")
         player3img = pygame.image.load("frog3.png")
@@ -101,9 +101,6 @@ def Skin(sken):
         yellowe = pygame.image.load("banan.png")
         blacke = pygame.image.load("brownbanan.png")
         bluee = pygame.image.load("greenbanan.png")
-        
-monkeyselect = pygame.image.load("monkeman21.png")
-frogselect = pygame.image.load("frog1.png")
 
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
@@ -118,6 +115,8 @@ primary = True
 
 
 try:
+    monkeyselect = pygame.image.load("monkeman21.png")
+    frogselect = pygame.image.load("frog1.png")
     sky = pygame.image.load("sky1.jpg")
     sky = pygame.transform.scale(sky, (1500, 1200))
     grass = pygame.image.load("grass1.jpg")
@@ -302,9 +301,9 @@ while master:
         draw(menu, menurect)
         if mouse:
             if monkeyskin.collidepoint(mousepos):
-                Skin(menkey)
+                Skin("menkey")
             if frogskin.collidepoint(mousepos):
-                Skin(freg)
+                Skin("freg")
             if menurect.collidepoint(mousepos):
                 page = True
                 skin_selection = False
