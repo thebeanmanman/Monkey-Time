@@ -126,7 +126,7 @@ try:
     menu = pygame.image.load("menu.png")
     playagain = pygame.image.load("playagain.png")
     playbutton = pygame.image.load("playbutton.png")
-    Skin(menkey)
+    Skin("menkey")
     skin = pygame.image.load("skin.png")
     settings = pygame.image.load("settings.png")
     gamebutton = pygame.image.load("gameicon.png")
