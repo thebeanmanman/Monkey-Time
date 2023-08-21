@@ -98,9 +98,9 @@ def Skin(sken):
         player2img = pygame.image.load("frog2.png")
         player3img = pygame.image.load("frog3.png")
         player4img = pygame.image.load("frog4.png")
-        yellowe = pygame.image.load("banan.png")
-        blacke = pygame.image.load("brownbanan.png")
-        bluee = pygame.image.load("greenbanan.png")
+        yellowe = pygame.image.load("fly.png")
+        blacke = pygame.image.load("wasp.png")
+        bluee = pygame.image.load("dragonfly.png")
 
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
