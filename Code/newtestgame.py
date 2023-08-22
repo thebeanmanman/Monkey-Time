@@ -102,6 +102,8 @@ def Skin(sken):
         yellowe = pygame.image.load("fly.png")
         blacke = pygame.image.load("wasp.png")
         bluee = pygame.image.load("dragonfly.png")
+    elif sken == "sw":
+        player1img = pygame.image.load("luke.png")
 
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
@@ -118,6 +120,7 @@ primary = True
 try:
     monkeyselect = pygame.image.load("monkeman21.png")
     frogselect = pygame.image.load("frog1.png")
+    swselect = pygame.image.load("luke.png")
     sky = pygame.image.load("sky1.jpg")
     sky = pygame.transform.scale(sky, (1500, 1200))
     grass = pygame.image.load("grass1.jpg")
@@ -296,16 +299,28 @@ while master:
         text("Monkey", 250, 400, 50, black, "jungle adventurer")
         draw(frogselect, frogskin)
         text("Frog", 500, 400, 50, black, "jungle adventurer")
-        draw(player3img, swskin)
+        draw(swselect, swskin)
         text("Star Wars", 750, 400, 50, black, "jungle adventurer")
         draw(player4img, primeskin)
         text("Waldon", 1000, 400, 50, black, "jungle adventurer")
         draw(menu, menurect)
+        banana1 = banana(random_b[0], 2, random_b[1])
+        random_b = Random_b()
+        banana2 = banana(random_b[0], 2, random_b[1])
+        random_b = Random_b()
+        banana3 = banana(random_b[0], 2, random_b[1])
+        random_b = Random_b()
+        banana4 = banana(random_b[0], 2, random_b[1])
+        random_b = Random_b()
+        banana5 = banana(random_b[0], 2, random_b[1])
+        random_b = Random_b()
         if mouse:
             if monkeyskin.collidepoint(mousepos):
                 Skin("menkey")
             if frogskin.collidepoint(mousepos):
                 Skin("freg")
+            if swskin.collidepoint(mousepos):
+                Skin("sw")
             if menurect.collidepoint(mousepos):
                 page = True
                 skin_selection = False
