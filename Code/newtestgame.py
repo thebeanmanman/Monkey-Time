@@ -57,6 +57,9 @@ pj2 = juump(1, 10, False)
 pj3 = juump(1, 10, False)
 pj4 = juump(1, 10, False)
 
+rot = 0
+rotation = 0
+
 black_bar = pygame.Rect(0,0,1500,120)
 startrect = pygame.Rect(1200,800,200,100)
 exitrect = pygame.Rect(200,750,150,150)
@@ -104,6 +107,9 @@ def Skin(sken):
         bluee = pygame.image.load("dragonfly.png")
     elif sken == "sw":
         player1img = pygame.image.load("luke.png")
+        player2img = pygame.image.load("obiobi.png")
+        player3img = pygame.image.load("ahsoka.png")
+        player4img = pygame.image.load("seagulls.png")
 
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
@@ -164,6 +170,10 @@ except FileNotFoundError:
     primary = False
     def draw(img, rect):
         return pygame.draw.rect(canvas, img, rect)
+
+def rotate(img, rect, angle):
+    rotated_img = pygame.transform.rotozoom(img, angle, 1)
+    canvas.blit(rotated_img, rotated_img.get_rect(center=img.get_rect(topleft=(rect.x, rect.y)).center).topleft)
 
 class Player(object):
     def __init__(self, jump, left, right):
@@ -482,11 +492,12 @@ while master:
             draw(player3img, player3)
         if isplay4%2:
             draw(player4img, player4)
-        draw(banana1.picture, Banana_rect1)
-        draw(banana2.picture, Banana_rect2)
-        draw(banana3.picture, Banana_rect3)
-        draw(banana4.picture, Banana_rect4)
-        draw(banana5.picture, Banana_rect5)
+        rot += 1
+        rotate(banana1.picture, Banana_rect1, rot)
+        rotate(banana2.picture, Banana_rect2, rot)
+        rotate(banana3.picture, Banana_rect3, rot)
+        rotate(banana4.picture, Banana_rect4, rot)
+        rotate(banana5.picture, Banana_rect5, rot)
         Banana_rect1.y += banana1.initfallspeed
         Banana_rect2.y += banana2.initfallspeed
         Banana_rect3.y += banana3.initfallspeed
