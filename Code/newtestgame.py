@@ -71,6 +71,7 @@ pointselect100 = pygame.Rect(400,800,100,100)
 pointselect150 = pygame.Rect(600,800,100,100)
 pointselect200 = pygame.Rect(800,800,100,100)
 pointselectRnd = pygame.Rect(1000,800,100,100)
+dicerect = pygame.Rect(1005,805,100,100)
        
 monkeyskin = pygame.Rect(250, 250, 150, 150)
 frogskin = pygame.Rect(500, 250, 150, 150)
@@ -131,6 +132,7 @@ try:
     settings = pygame.image.load("settings.png")
     gamebutton = pygame.image.load("gameicon.png")
     backarrow = pygame.image.load("Arrow.png")
+    dice = pygame.image.load("dice.png")
     def draw(img, pos):
         return canvas.blit(img, pos)
 except FileNotFoundError:
@@ -362,7 +364,10 @@ while master:
         text("100", 412.5, 825, 50, black, "arial")
         text("150", 612.5, 825, 50, black, "arial")
         text("200", 812.5, 825, 50, black, "arial")
-        text("Rnd", 1012.5, 825, 50, black, "arial")
+        if primary:
+            draw(dice, dicerect)
+        else:
+            text("Rnd", 1012.5, 825, 50, black, "arial")
         if mouse:
             if start_player1.collidepoint(mousepos):
                 isplay1 += 1
