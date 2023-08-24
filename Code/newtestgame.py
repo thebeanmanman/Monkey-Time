@@ -8,11 +8,12 @@ skin_selection = False
 Open_ui = True
 winning = False
 Tic_Tac_Toe = False
-
+pausing = False
 
 canvas = pygame.display.set_mode((1500, 1000))
 canvas_rect = canvas.get_rect()
 clock = pygame.time.Clock()
+pygame.display.set_caption("Monkey Time 2.0")
 
 
 lightblue = ("#00b2ff")
@@ -68,6 +69,7 @@ playagainrect = pygame.Rect(1150,750,150,150)
 playrect = pygame.Rect(600,350,300,300)
 settingsrect = pygame.Rect(100,750,150,150)
 skinrect = pygame.Rect(1250,750,150,150)
+skinrect2 = pygame.Rect(925,750,150,150)
 gamerect = pygame.Rect(350,425,150,150)
 pointselect50 = pygame.Rect(200,800,100,100)
 pointselect100 = pygame.Rect(400,800,100,100)
@@ -288,7 +290,8 @@ isplay2 = 0
 isplay3 = 0
 isplay4 = 0
 can_start = 2
-pygame.display.set_caption("Monkey Time 2.0")
+
+cskin = False
 
 while master:
     while page:
@@ -335,7 +338,10 @@ while master:
         text("Star Wars", 750, 400, 50, black, "jungle adventurer")
         #draw(player4img, primeskin)
         #text("Waldon", 1000, 400, 50, black, "jungle adventurer")
-        draw(menu, menurect)
+        if not cskin:
+            draw(menu, menurect)
+        if cskin:
+            draw(backarrow, backrect)
         banana1 = banana(random_b[0], 2, random_b[1])
         random_b = Random_b()
         banana2 = banana(random_b[0], 2, random_b[1])
@@ -353,9 +359,15 @@ while master:
                 Skin("freg")
             if swskin.collidepoint(mousepos):
                 Skin("sw")
-            if menurect.collidepoint(mousepos):
-                page = True
-                skin_selection = False
+            if not cskin:
+                if menurect.collidepoint(mousepos):
+                    page = True
+                    skin_selection = False
+            if cskin:
+                if backrect.collidepoint(mousepos):
+                    exit = False
+                    pausing = True
+                    skin_selection = False
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -804,6 +816,72 @@ while master:
         if isplay4%2:
             text("Player 4: "+str(p4points),1200,60,60,white, "Jungle Adventurer")
         text("Goal: "+str(winpoints),600,50,100,white,"Jungle Adventurer")
+        if keys[pygame.K_SPACE]:
+            pausing = True
+        while pausing:
+            draw(menu, menurect)
+            draw(playbutton, playrect)
+            draw(exiticon, exitrect)
+            draw(playagain, playagainrect)
+            draw(skin, skinrect2)
+            keys = pygame.key.get_pressed()
+            mouse = pygame.mouse.get_pressed()[0]
+            mousepos = pygame.mouse.get_pos()
+            if mouse:
+                if skinrect2.collidepoint(mousepos):
+                    pausing = False
+                    exit = True
+                    skin_selection = True 
+                    cskin = True
+                if menurect.collidepoint(mousepos):
+                    pausing = False
+                    exit = True
+                    page = True
+                    isplay1 = 0
+                    isplay2 = 0
+                    isplay3 = 0
+                    isplay4 = 0
+                    player1 = pygame.Rect(125, deck, 150, 147)
+                    player2 = pygame.Rect(500, deck, 150, 147)
+                    player3 = pygame.Rect(875, deck, 150, 147)
+                    player4 = pygame.Rect(1250, deck, 150, 147)
+                    Banana_rect1.y = 0
+                    Banana_rect2.y = 0
+                    Banana_rect3.y = 0
+                    Banana_rect4.y = 0
+                    Banana_rect5.y = 0
+                    p1points = 0
+                    p2points = 0
+                    p3points = 0
+                    p4points = 0
+                    winpoints = 0
+                if exitrect.collidepoint(mousepos):
+                    pygame.quit()
+                if playagainrect.collidepoint(mousepos):
+                    pausing = False
+                    player1 = pygame.Rect(125, deck, 150, 147)
+                    player2 = pygame.Rect(500, deck, 150, 147)
+                    player3 = pygame.Rect(875, deck, 150, 147)
+                    player4 = pygame.Rect(1250, deck, 150, 147)
+                    Banana_rect1.y = 0
+                    Banana_rect2.y = 0
+                    Banana_rect3.y = 0
+                    Banana_rect4.y = 0
+                    Banana_rect5.y = 0
+                    p1points = 0
+                    p2points = 0
+                    p3points = 0
+                    p4points = 0
+                if playrect.collidepoint(mousepos):
+                    pausing = False
+            for event in pygame.event.get():
+	            if event.type == pygame.QUIT:
+                        pygame.quit()
+            if keys[pygame.K_q] and keys[pygame.K_p]:
+                pygame.quit()
+            pygame.display.update()
+            clock.tick(600)
+                    
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         player1.clamp_ip(canvas_rect)
@@ -839,10 +917,10 @@ while master:
                 isplay2 = 0
                 isplay3 = 0
                 isplay4 = 0
-                player1 = pygame.Rect(100, deck, 150, 147)
-                player2 = pygame.Rect(900, deck, 150, 147)
-                player3 = pygame.Rect(700, deck, 150, 147)
-                player4 = pygame.Rect(300, deck, 150, 147)
+                player1 = pygame.Rect(125, deck, 150, 147)
+                player2 = pygame.Rect(500, deck, 150, 147)
+                player3 = pygame.Rect(875, deck, 150, 147)
+                player4 = pygame.Rect(1250, deck, 150, 147)
                 Banana_rect1.y = 0
                 Banana_rect2.y = 0
                 Banana_rect3.y = 0
@@ -852,10 +930,10 @@ while master:
             if playagainrect.collidepoint(mousepos):
                 winning = False
                 exit = False
-                player1 = pygame.Rect(100, deck, 150, 147)
-                player2 = pygame.Rect(900, deck, 150, 147)
-                player3 = pygame.Rect(700, deck, 150, 147)
-                player4 = pygame.Rect(300, deck, 150, 147)
+                player1 = pygame.Rect(125, deck, 150, 147)
+                player2 = pygame.Rect(500, deck, 150, 147)
+                player3 = pygame.Rect(875, deck, 150, 147)
+                player4 = pygame.Rect(1250, deck, 150, 147)
                 Banana_rect1.y = 0
                 Banana_rect2.y = 0
                 Banana_rect3.y = 0
