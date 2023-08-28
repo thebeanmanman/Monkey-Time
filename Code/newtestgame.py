@@ -6,6 +6,7 @@ page = True
 exit = True
 skin_selection = False
 Open_ui = True
+Game_mode = False
 winning = False
 Tic_Tac_Toe = False
 pausing = False
@@ -57,7 +58,6 @@ pj3 = juump(1, 10, False)
 pj4 = juump(1, 10, False)
 
 rot = 0
-rotation = 0
 
 black_bar = pygame.Rect(0,0,1500,120)
 startrect = pygame.Rect(1200,800,200,100)
@@ -69,6 +69,8 @@ settingsrect = pygame.Rect(100,750,150,150)
 skinrect = pygame.Rect(1250,750,150,150)
 skinrect2 = pygame.Rect(925,750,150,150)
 gamerect = pygame.Rect(350,425,150,150)
+backrect = pygame.Rect(75,75,100,100)
+gmsettingrect = pygame.Rect(1325,75,100,100)
 pointselect50 = pygame.Rect(200,800,100,100)
 pointselect100 = pygame.Rect(400,800,100,100)
 pointselect150 = pygame.Rect(600,800,100,100)
@@ -148,7 +150,6 @@ start_player1 = pygame.Rect(200, 200, 150, 147)
 start_player2 = pygame.Rect(1050, 200, 150, 147)
 start_player3 = pygame.Rect(200, 500, 150, 147)
 start_player4 = pygame.Rect(1050, 500, 150, 147)
-backrect = pygame.Rect(75,75,100,100)
 primary = True
 
 
@@ -398,6 +399,10 @@ while master:
         draw(player3img, start_player3)
         draw(player4img, start_player4)
         draw(backarrow, backrect)
+        if primary:
+            draw(pygame.transform.scale(settings, (100, 100)), gmsettingrect)
+        else:
+            draw(settings, gmsettingrect)
         if winpoints == 0:
             resetorangei()
         elif winpoints == 50:
@@ -459,6 +464,9 @@ while master:
             if backrect.collidepoint(mousepos):
                 page = True
                 Open_ui = True
+            if gmsettingrect.collidepoint(mousepos):
+                Game_mode = True
+                Open_ui = True
         if  keys[pygame.K_5]:
             winpoints = 50
             pygame.time.delay(100)
@@ -508,6 +516,19 @@ while master:
             text("Player 4 is playing",950,650,50,green, "arial")
         else:
             text("Player 4 is not playing",950,650,50,red, "arial")
+        if keys[pygame.K_q] and keys[pygame.K_p]:
+            pygame.quit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update()
+
+    while Game_mode:
+        canvas.fill(black)
+        mouse = pygame.mouse.get_pressed()[0]
+        mousepos = pygame.mouse.get_pos()
+        keys = pygame.key.get_pressed()
+        
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
