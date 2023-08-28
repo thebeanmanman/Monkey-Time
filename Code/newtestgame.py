@@ -34,8 +34,6 @@ grassrect = pygame.Rect(0,700, 1500, 300)
 winner = ""
 keys = pygame.key.get_pressed()
 
-    
-
 class juump(object):
     def __init__(self, m, v, is_jump):
         self.m = m
@@ -93,6 +91,7 @@ def Skin(sken):
     global bluee
     global sky
     global grass
+    global swselect
     if sken == "menkey":
         player1img = pygame.image.load("monkeman21.png")
         player2img = pygame.image.load("monkeman1.png")
@@ -130,6 +129,7 @@ def Skin(sken):
             yellowe = pygame.image.load("bluelight.png")
             blacke = pygame.image.load("redlight.png")
             bluee = pygame.image.load("jediholo.png")
+            swselect = pygame.image.load("luke.png")
         else:
             player1img = pygame.image.load("vader.png")
             player2img = pygame.image.load("maul.png")
@@ -138,6 +138,7 @@ def Skin(sken):
             yellowe = pygame.image.load("redlight.png")
             blacke = pygame.image.load("bluelight.png")
             bluee = pygame.image.load("sithholo.png")
+            swselect = pygame.image.load("vader.png")
 
 player1 = pygame.Rect(125, deck, 150, 147)
 player2 = pygame.Rect(500, deck, 150, 147)
