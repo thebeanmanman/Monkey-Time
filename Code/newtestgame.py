@@ -193,6 +193,7 @@ except FileNotFoundError:
     skin = yellow
     settings = "grey"
     gamebutton = black
+    backarrow = orange
     primary = False
     def draw(img, rect):
         return pygame.draw.rect(canvas, img, rect)
@@ -549,11 +550,18 @@ while master:
         if isplay4%2:
             draw(player4img, player4)
         rot += 1
-        rotate(banana1.picture, Banana_rect1, rot)
-        rotate(banana2.picture, Banana_rect2, rot)
-        rotate(banana3.picture, Banana_rect3, rot)
-        rotate(banana4.picture, Banana_rect4, rot)
-        rotate(banana5.picture, Banana_rect5, rot)
+        if primary:
+            rotate(banana1.picture, Banana_rect1, rot)
+            rotate(banana2.picture, Banana_rect2, rot)
+            rotate(banana3.picture, Banana_rect3, rot)
+            rotate(banana4.picture, Banana_rect4, rot)
+            rotate(banana5.picture, Banana_rect5, rot)
+        else:
+            draw(banana1.picture, Banana_rect1)
+            draw(banana2.picture, Banana_rect2)
+            draw(banana3.picture, Banana_rect3)
+            draw(banana4.picture, Banana_rect4)
+            draw(banana5.picture, Banana_rect5)
         Banana_rect1.y += banana1.initfallspeed
         Banana_rect2.y += banana2.initfallspeed
         Banana_rect3.y += banana3.initfallspeed
