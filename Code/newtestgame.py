@@ -82,18 +82,7 @@ monkeyskin = pygame.Rect(250, 250, 150, 150)
 frogskin = pygame.Rect(500, 250, 150, 150)
 swskin = pygame.Rect(750, 250, 150, 150)
 primeskin = pygame.Rect(1000, 250, 150, 150)
-teeststtt
-def Nanana(b, b_r):
-
-if pygame.Rect.colliderect(player1, Banana_rect1) == True:
-                p1points += banana1.worth
-                Banana_rect1.y = 0
-                banana1.addfall()
-                Banana_rect1.x = Randompos()
-                random_b = Random_b()
-                banana1 = banana(random_b[0], 2, random_b[1])
-                enfuehrggruihr
-
+                
 def Skin(sken):
     global player1img, player2img, player3img, player4img, yellowe, blacke, bluee, sky, grass, swselect
     if sken == "menkey":
