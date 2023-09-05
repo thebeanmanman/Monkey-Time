@@ -71,6 +71,7 @@ skinrect = pygame.Rect(1250,750,150,150)
 skinrect2 = pygame.Rect(925,750,150,150)
 gamerect = pygame.Rect(350,425,150,150)
 backrect = pygame.Rect(75,75,100,100)
+gmbackrect = pygame.Rect(75,825,100,100)
 gmsettingrect = pygame.Rect(1325,75,100,100)
 pointselect50 = pygame.Rect(200,800,100,100)
 pointselect100 = pygame.Rect(400,800,100,100)
@@ -286,6 +287,7 @@ cskin = False
 while master:
     while page:
         canvas.fill(lightblue)
+        text("Monkey Time", 100, 50, 300, "white", "jungle adventurer")
         draw(playbutton, playrect)
         draw(gamebutton, gamerect)
         if primary:
@@ -537,7 +539,11 @@ while master:
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
         keys = pygame.key.get_pressed()
-        
+        draw(backarrow, gmbackrect)
+        if mouse:
+            if gmbackrect.collidepoint(mousepos):
+                Open_ui = False
+                Game_mode = False
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
