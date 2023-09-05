@@ -8,6 +8,7 @@ skin_selection = False
 Open_ui = True
 Game_mode = False
 winning = False
+game_selection = False
 Tic_Tac_Toe = False
 pausing = False
 
@@ -159,6 +160,7 @@ try:
     gamebutton = pygame.image.load("gameicon.png")
     backarrow = pygame.image.load("Arrow.png")
     dice = pygame.image.load("dice.png")
+    ticicon = pygame.image.load("ticicon.png")
     def draw(img, pos):
         return canvas.blit(img, pos)
 except FileNotFoundError:
@@ -200,12 +202,10 @@ class Player(object):
         self.right = right
 
 class banana(object):
-    def __init__(self, picture, initfallspeed, worth):
+    def __init__(self, picture, worth):
         self.picture = picture
-        self.initfallspeed = initfallspeed
         self.worth = worth
-    def addfall(self):
-        self.initfallspeed += 0.25
+
    
 def bananana(initx):
     return pygame.Rect(initx, 0, 150, 147)
@@ -231,15 +231,15 @@ def Randompos():
 random_b = Random_b()
 randompos = Randompos()
        
-banana1 = banana(random_b[0], 2, random_b[1])
+banana1 = banana(random_b[0], random_b[1])
 random_b = Random_b()
-banana2 = banana(random_b[0], 2, random_b[1])
+banana2 = banana(random_b[0], random_b[1])
 random_b = Random_b()
-banana3 = banana(random_b[0], 2, random_b[1])
+banana3 = banana(random_b[0], random_b[1])
 random_b = Random_b()
-banana4 = banana(random_b[0], 2, random_b[1])
+banana4 = banana(random_b[0], random_b[1])
 random_b = Random_b()
-banana5 = banana(random_b[0], 2, random_b[1])
+banana5 = banana(random_b[0], random_b[1])
 random_b = Random_b()
 
 
@@ -290,7 +290,6 @@ while master:
         draw(gamebutton, gamerect)
         if primary:
             draw(skin, skinrect)
-        #draw(settings, settingsrect)
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
@@ -301,7 +300,7 @@ while master:
         if mouse:
             if gamerect.collidepoint(mousepos):
                 page = False
-                Tic_Tac_Toe = True
+                game_selection = True
         if primary:
             if mouse:
                 if skinrect.collidepoint(mousepos):
@@ -332,15 +331,15 @@ while master:
             draw(menu, menurect)
         if cskin:
             draw(backarrow, backrect)
-        banana1 = banana(random_b[0], 2, random_b[1])
+        banana1 = banana(random_b[0], random_b[1])
         random_b = Random_b()
-        banana2 = banana(random_b[0], 2, random_b[1])
+        banana2 = banana(random_b[0], random_b[1])
         random_b = Random_b()
-        banana3 = banana(random_b[0], 2, random_b[1])
+        banana3 = banana(random_b[0], random_b[1])
         random_b = Random_b()
-        banana4 = banana(random_b[0], 2, random_b[1])
+        banana4 = banana(random_b[0], random_b[1])
         random_b = Random_b()
-        banana5 = banana(random_b[0], 2, random_b[1])
+        banana5 = banana(random_b[0], random_b[1])
         random_b = Random_b()
         if mouse:
             if monkeyskin.collidepoint(mousepos):
@@ -358,6 +357,28 @@ while master:
                     exit = False
                     pausing = True
                     skin_selection = False
+        if keys[pygame.K_q] and keys[pygame.K_p]:
+            pygame.quit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update() 
+
+    while game_selection:
+        canvas.fill(white)
+        keys = pygame.key.get_pressed()
+        mouse = pygame.mouse.get_pressed()[0]
+        mousepos = pygame.mouse.get_pos()
+        text("Game Selection", 250, 50, 200, black, "jungle adventurer")
+        draw(ticicon, monkeyskin)
+        draw(menu, menurect)
+        if mouse:
+            if menurect.collidepoint(mousepos):
+                page = True
+                game_selection = False
+            if monkeyskin.collidepoint(mousepos):
+                game_selection = False
+                Tic_Tac_Toe = True
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -523,7 +544,12 @@ while master:
             if event.type == pygame.QUIT:
                 pygame.quit()
         pygame.display.update()
-
+    
+    banana1initfallspeed = 2
+    banana2initfallspeed = 2
+    banana3initfallspeed = 2
+    banana4initfallspeed = 2
+    banana5initfallspeed = 2
     while not exit:
         canvas.fill(white)
         draw(sky, skyrect)
@@ -549,37 +575,37 @@ while master:
             draw(banana3.picture, Banana_rect3)
             draw(banana4.picture, Banana_rect4)
             draw(banana5.picture, Banana_rect5)
-        Banana_rect1.y += banana1.initfallspeed
-        Banana_rect2.y += banana2.initfallspeed
-        Banana_rect3.y += banana3.initfallspeed
-        Banana_rect4.y += banana4.initfallspeed
-        Banana_rect5.y += banana5.initfallspeed
+        Banana_rect1.y += banana1initfallspeed
+        Banana_rect2.y += banana2initfallspeed
+        Banana_rect3.y += banana3initfallspeed
+        Banana_rect4.y += banana4initfallspeed
+        Banana_rect5.y += banana5initfallspeed
        
         if Banana_rect1.top > deck:
             Banana_rect1.y = 0
             Banana_rect1.x = Randompos()
             random_b = Random_b()
-            banana1 = banana(random_b[0], 2, random_b[1])
+            banana1 = banana(random_b[0], random_b[1])
         if Banana_rect2.top > deck:
             Banana_rect2.y = 0
             Banana_rect2.x = Randompos()
             random_b = Random_b()
-            banana2 = banana(random_b[0], 2, random_b[1])
+            banana2 = banana(random_b[0], random_b[1])
         if Banana_rect3.top > deck:
             Banana_rect3.y = 0
             Banana_rect3.x = Randompos()
             random_b = Random_b()
-            banana3 = banana(random_b[0], 2, random_b[1])
+            banana3 = banana(random_b[0], random_b[1])
         if Banana_rect4.top > deck:
             Banana_rect4.y = 0
             Banana_rect4.x = Randompos()
             random_b = Random_b()
-            banana4 = banana(random_b[0], 2, random_b[1])
+            banana4 = banana(random_b[0], random_b[1])
         if Banana_rect5.top > deck:
             Banana_rect5.y = 0
             Banana_rect5.x = Randompos()
             random_b = Random_b()
-            banana5 = banana(random_b[0], 2, random_b[1])
+            banana5 = banana(random_b[0], random_b[1])
 
 
        
@@ -667,146 +693,146 @@ while master:
             if pygame.Rect.colliderect(player1, Banana_rect1) == True:
                 p1points += banana1.worth
                 Banana_rect1.y = 0
-                banana1.addfall()
+                banana1initfallspeed += 0.25
                 Banana_rect1.x = Randompos()
                 random_b = Random_b()
-                banana1 = banana(random_b[0], 2, random_b[1])
+                banana1 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player1, Banana_rect2) == True:
                 p1points += banana2.worth
                 Banana_rect2.y = 0
-                banana2.addfall()
+                banana2initfallspeed += 0.25
                 Banana_rect2.x = Randompos()
                 random_b = Random_b()
-                banana2 = banana(random_b[0], 2, random_b[1])
+                banana2 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player1, Banana_rect3) == True:
                 p1points += banana3.worth
                 Banana_rect3.y = 0
-                banana3.addfall()
+                banana3initfallspeed += 0.25
                 Banana_rect3.x = Randompos()
                 random_b = Random_b()
-                banana3 = banana(random_b[0], 2, random_b[1])
+                banana3 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player1, Banana_rect4) == True:
                 p1points += banana4.worth
                 Banana_rect4.y = 0
-                banana4.addfall()
+                banana4initfallspeed += 0.25
                 Banana_rect4.x = Randompos()
                 random_b = Random_b()
-                banana4 = banana(random_b[0], 2, random_b[1])
+                banana4 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player1, Banana_rect5) == True:
                 p1points += banana5.worth
                 Banana_rect5.y = 0
-                banana5.addfall()
+                banana5initfallspeed += 0.25
                 Banana_rect5.x = Randompos()
                 random_b = Random_b()
-                banana5 = banana(random_b[0], 2, random_b[1])
+                banana5 = banana(random_b[0], random_b[1])
         if isplay2%2:
             if pygame.Rect.colliderect(player2, Banana_rect1) == True:
                 p2points += banana1.worth
                 Banana_rect1.y = 0
-                banana1.addfall()
+                banana1initfallspeed += 0.25
                 Banana_rect1.x = Randompos()
                 random_b = Random_b()
-                banana1 = banana(random_b[0], 2, random_b[1])
+                banana1 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player2, Banana_rect2) == True:
                 p2points += banana2.worth
                 Banana_rect2.y = 0
-                banana2.addfall()
+                banana2initfallspeed += 0.25
                 Banana_rect2.x = Randompos()
                 random_b = Random_b()
-                banana2 = banana(random_b[0], 2, random_b[1])
+                banana2 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player2, Banana_rect3) == True:
                 p2points += banana3.worth
                 Banana_rect3.y = 0
-                banana3.addfall()
+                banana3initfallspeed += 0.25
                 Banana_rect3.x = Randompos()
                 random_b = Random_b()
-                banana3 = banana(random_b[0], 2, random_b[1])
+                banana3 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player2, Banana_rect4) == True:
                 p2points += banana4.worth
                 Banana_rect4.y = 0
-                banana4.addfall()
+                banana4initfallspeed += 0.25
                 Banana_rect4.x = Randompos()
                 random_b = Random_b()
-                banana4 = banana(random_b[0], 2, random_b[1])
+                banana4 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player2, Banana_rect5) == True:
                 p2points += banana5.worth
                 Banana_rect5.y = 0
-                banana5.addfall()
+                banana5initfallspeed += 0.25
                 Banana_rect5.x = Randompos()
                 random_b = Random_b()
-                banana5 = banana(random_b[0], 2, random_b[1])
+                banana5 = banana(random_b[0], random_b[1])
         if isplay3%2:
             if pygame.Rect.colliderect(player3, Banana_rect1) == True:
                 p3points += banana1.worth
                 Banana_rect1.y = 0
-                banana1.addfall()
+                banana1initfallspeed += 0.25
                 Banana_rect1.x = Randompos()
                 random_b = Random_b()
-                banana1 = banana(random_b[0], 2, random_b[1])
+                banana1 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player3, Banana_rect2) == True:
                 p3points += banana2.worth
                 Banana_rect2.y = 0
-                banana2.addfall()
+                banana2initfallspeed += 0.25
                 Banana_rect2.x = Randompos()
                 random_b = Random_b()
-                banana2 = banana(random_b[0], 2, random_b[1])
+                banana2 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player3, Banana_rect3) == True:
                 p3points += banana3.worth
                 Banana_rect3.y = 0
-                banana3.addfall()
+                banana3initfallspeed += 0.25
                 Banana_rect3.x = Randompos()
                 random_b = Random_b()
-                banana3 = banana(random_b[0], 2, random_b[1])
+                banana3 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player3, Banana_rect4) == True:
                 p3points += banana4.worth
                 Banana_rect4.y = 0
-                banana4.addfall()
+                banana4initfallspeed += 0.25
                 Banana_rect4.x = Randompos()
                 random_b = Random_b()
-                banana4 = banana(random_b[0], 2, random_b[1])
+                banana4 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player3, Banana_rect5) == True:
                 p3points += banana5.worth
                 Banana_rect5.y = 0
-                banana5.addfall()
+                banana5initfallspeed += 0.25
                 Banana_rect5.x = Randompos()
                 random_b = Random_b()
-                banana5 = banana(random_b[0], 2, random_b[1])
+                banana5 = banana(random_b[0], random_b[1])
         if isplay4%2:
             if pygame.Rect.colliderect(player4, Banana_rect1) == True:
                 p4points += banana1.worth
                 Banana_rect1.y = 0
-                banana1.addfall()
+                banana1initfallspeed += 0.25
                 Banana_rect1.x = Randompos()
                 random_b = Random_b()
-                banana1 = banana(random_b[0], 2, random_b[1])
+                banana1 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player4, Banana_rect2) == True:
                 p4points += banana2.worth
                 Banana_rect2.y = 0
-                banana2.addfall()
+                banana2initfallspeed += 0.25
                 Banana_rect2.x = Randompos()
                 random_b = Random_b()
-                banana2 = banana(random_b[0], 2, random_b[1])
+                banana2 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player4, Banana_rect3) == True:
                 p4points += banana3.worth
                 Banana_rect3.y = 0
-                banana3.addfall()
+                banana3initfallspeed += 0.25
                 Banana_rect3.x = Randompos()
                 random_b = Random_b()
-                banana3 = banana(random_b[0], 2, random_b[1])
+                banana3 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player4, Banana_rect4) == True:
                 p4points += banana4.worth
                 Banana_rect4.y = 0
-                banana4.addfall()
+                banana4initfallspeed += 0.25
                 Banana_rect4.x = Randompos()
                 random_b = Random_b()
-                banana4 = banana(random_b[0], 2, random_b[1])
+                banana4 = banana(random_b[0], random_b[1])
             if pygame.Rect.colliderect(player4, Banana_rect5) == True:
                 p4points += banana5.worth
                 Banana_rect5.y = 0
-                banana5.addfall()
+                banana5initfallspeed += 0.25
                 Banana_rect5.x = Randompos()
                 random_b = Random_b()
-                banana5 = banana(random_b[0], 2, random_b[1])
+                banana5 = banana(random_b[0], random_b[1])
         if p1points >= winpoints:
             winner = "Player 1"
             exit = True
