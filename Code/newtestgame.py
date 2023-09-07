@@ -50,7 +50,9 @@ winpoints = 0
 def text(text, a, b, si, col, font):
     font= pygame.font.SysFont(font,si)
     texting = font.render(text, True, col)
+    a -= texting.get_width()/2
     canvas.blit(texting, (a,b))
+    
 
 
 pj1 = juump(1, 10, False)
@@ -60,7 +62,7 @@ pj4 = juump(1, 10, False)
 
 rot = 0
 
-black_bar = pygame.Rect(0,0,1500,120)
+black_bar = pygame.Rect(0,0,1500,145)
 startrect = pygame.Rect(1200,800,200,100)
 exitrect = pygame.Rect(200,750,150,150)
 menurect = pygame.Rect(675,750,150,150)
@@ -287,7 +289,8 @@ cskin = False
 while master:
     while page:
         canvas.fill(lightblue)
-        text("Monkey Time", 100, 50, 300, "white", "jungle adventurer")
+        text("Monkey Time", 745, 45, 300, "black", "jungle adventurer")
+        text("Monkey Time", 750, 50, 300, "white", "jungle adventurer")
         draw(playbutton, playrect)
         draw(gamebutton, gamerect)
         if primary:
@@ -320,13 +323,13 @@ while master:
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
-        text("Skin Selection", 250, 50, 200, black, "jungle adventurer")
+        text("Skin Selection", 750, 50, 200, black, "jungle adventurer")
         draw(monkeyselect, monkeyskin)
-        text("Monkey", 250, 400, 50, black, "jungle adventurer")
+        text("Monkey", monkeyskin.centerx, 400, 50, black, "jungle adventurer")
         draw(frogselect, frogskin)
-        text("Frog", 500, 400, 50, black, "jungle adventurer")
+        text("Frog", frogskin.centerx, 400, 50, black, "jungle adventurer")
         draw(swselect, swskin)
-        text("Star Wars", 750, 400, 50, black, "jungle adventurer")
+        text("Star Wars", swskin.centerx, 400, 50, black, "jungle adventurer")
         #draw(player4img, primeskin)
         #text("Waldon", 1000, 400, 50, black, "jungle adventurer")
         if not cskin:
@@ -371,8 +374,9 @@ while master:
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
-        text("Game Selection", 250, 50, 200, black, "jungle adventurer")
+        text("Game Selection", 750, 50, 200, black, "jungle adventurer")
         draw(ticicon, monkeyskin)
+        text("Tic Tac Toe", monkeyskin.centerx, 400, 50, black, "jungle adventurer")
         draw(menu, menurect)
         if mouse:
             if menurect.collidepoint(mousepos):
@@ -390,7 +394,7 @@ while master:
 
     while not Open_ui:
         canvas.fill(black)
-        text(f"Win points = {winpoints}", 500, 100, 100, white, "arial")
+        text(f"Win points = {winpoints}", 750, 100, 100, white, "arial")
         can_start = isplay1%2 + isplay2%2 + isplay3%2 + isplay4%2
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
@@ -436,14 +440,14 @@ while master:
         pygame.draw.rect(canvas, orangei3, pointselect150)
         pygame.draw.rect(canvas, orangei4, pointselect200)
         pygame.draw.rect(canvas, orangei5, pointselectRnd)
-        text("50", 225, 825, 50, black, "arial")
-        text("100", 412.5, 825, 50, black, "arial")
-        text("150", 612.5, 825, 50, black, "arial")
-        text("200", 812.5, 825, 50, black, "arial")
+        text("50", pointselect50.centerx, 825, 50, black, "arial")
+        text("100", pointselect100.centerx, 825, 50, black, "arial")
+        text("150", pointselect150.centerx, 825, 50, black, "arial")
+        text("200", pointselect200.centerx, 825, 50, black, "arial")
         if primary:
             draw(dice, dicerect)
         else:
-            text("Rnd", 1012.5, 825, 50, black, "arial")
+            text("Rnd", pointselectRnd.centerx, 825, 50, black, "arial")
         if mouse:
             if start_player1.collidepoint(mousepos):
                 isplay1 += 1
@@ -512,21 +516,21 @@ while master:
             isplay4 += 1
             pygame.time.delay(200)
         if isplay1%2:
-            text("Player 1 is playing",100,350,50,green, "arial")
+            text("Player 1 is playing",start_player1.centerx,350,50,green, "arial")
         else:
-            text("Player 1 is not playing",100,350,50,red, "arial")
+            text("Player 1 is not playing",start_player1.centerx,350,50,red, "arial")
         if isplay2%2:
-            text("Player 2 is playing",950,350,50,green, "arial")
+            text("Player 2 is playing",start_player2.centerx,350,50,green, "arial")
         else:
-            text("Player 2 is not playing",950,350,50,red, "arial")
+            text("Player 2 is not playing",start_player2.centerx,350,50,red, "arial")
         if isplay3%2:
-            text("Player 3 is playing",100,650,50,green, "arial")
+            text("Player 3 is playing",start_player3.centerx,650,50,green, "arial")
         else:
-            text("Player 3 is not playing",100,650,50,red, "arial")
+            text("Player 3 is not playing",start_player3.centerx,650,50,red, "arial")
         if isplay4%2:
-            text("Player 4 is playing",950,650,50,green, "arial")
+            text("Player 4 is playing",start_player4.centerx,650,50,green, "arial")
         else:
-            text("Player 4 is not playing",950,650,50,red, "arial")
+            text("Player 4 is not playing",start_player4.centerx,650,50,red, "arial")
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -550,12 +554,12 @@ while master:
             if event.type == pygame.QUIT:
                 pygame.quit()
         pygame.display.update()
-    
-    banana1initfallspeed = 2
-    banana2initfallspeed = 2
-    banana3initfallspeed = 2
-    banana4initfallspeed = 2
-    banana5initfallspeed = 2
+    if not cskin:
+        banana1initfallspeed = 2
+        banana2initfallspeed = 2
+        banana3initfallspeed = 2
+        banana4initfallspeed = 2
+        banana5initfallspeed = 2
     while not exit:
         canvas.fill(white)
         draw(sky, skyrect)
@@ -612,14 +616,11 @@ while master:
             Banana_rect5.x = Randompos()
             random_b = Random_b()
             banana5 = banana(random_b[0], random_b[1])
-
-
        
         p1 = Player(keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d])
         p2 = Player(keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l])
         p3 = Player(keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT])
         p4 = Player(keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b])
-
 
         if player1.y > deck:
             player1.y=deck
@@ -858,14 +859,19 @@ while master:
         draw(grass, grassrect)
         pygame.draw.rect(canvas, black, black_bar)
         if isplay1%2:
-            text("Player 1: "+str(p1points),40,60,60,white, "Jungle Adventurer")
+            text("Player 1: "+str(p1points),150,60,60,white, "Jungle Adventurer")
+            text("Player 1",player1.centerx,110,50,white, "Jungle Adventurer")
         if isplay2%2:
-            text("Player 2: "+str(p2points),300,60,60,white, "Jungle Adventurer")
+            text("Player 2: "+str(p2points),450,60,60,white, "Jungle Adventurer")
+            text("Player 2",player2.centerx,110,50,white, "Jungle Adventurer")
         if isplay3%2:
-            text("Player 3: "+str(p3points),950,60,60,white, "Jungle Adventurer")
+            text("Player 3: "+str(p3points),1100,60,60,white, "Jungle Adventurer")
+            text("Player 3",player3.centerx,110,50,white, "Jungle Adventurer")
         if isplay4%2:
-            text("Player 4: "+str(p4points),1200,60,60,white, "Jungle Adventurer")
-        text("Goal: "+str(winpoints),600,50,100,white,"Jungle Adventurer")
+            text("Player 4: "+str(p4points),1350,60,60,white, "Jungle Adventurer")
+            text("Player 4",player4.centerx,110,50,white, "Jungle Adventurer")
+        text("Goal: "+str(winpoints),750,50,100,white,"Jungle Adventurer")
+        cskin = False
         if keys[pygame.K_SPACE]:
             pausing = True
         while pausing:
@@ -946,7 +952,7 @@ while master:
 
     while winning:
         canvas.fill(yellow)
-        text(f"{winner} is Full",200,300,200,black, "arial")
+        text(f"{winner} is Full",750,300,200,black, "arial")
         draw(exiticon, exitrect)
         draw(menu, menurect)
         draw(playagain, playagainrect)
@@ -1033,7 +1039,7 @@ while master:
                     T_img = player2img
                 canvas.blit(T_img, (ab,ba))
             else:
-                text(who, (ab-25), (ba-100), 300, black, "arial")
+                text(who, (ab), (ba-100), 300, black, "arial")
         def check(x,winner):
             global T_win
             di_win1 = 0
