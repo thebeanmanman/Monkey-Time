@@ -17,7 +17,6 @@ canvas_rect = canvas.get_rect()
 clock = pygame.time.Clock()
 pygame.display.set_caption("Monkey Time 2.0")
 
-
 lightblue = ("#00b2ff")
 blue = (0,0,255)
 white = (255,255,255)
@@ -283,6 +282,12 @@ isplay2 = 0
 isplay3 = 0
 isplay4 = 0
 can_start = 2
+def areplay(playis):
+    global isplay1,isplay2,isplay3,isplay4
+    isplay1 = playis
+    isplay2 = playis
+    isplay3 = playis
+    isplay4 = playis
 normal_mode = True
 v2v = False
 tmt = 1
@@ -520,6 +525,8 @@ while master:
         if keys[pygame.K_4]:
             isplay4 += 1
             pygame.time.delay(200)
+        if v2v:
+            areplay(1)
         if isplay1%2:
             text("Player 1 is playing",start_player1.centerx,350,50,green, "arial")
         else:
@@ -565,6 +572,7 @@ while master:
                 v2v = False
                 can_start = 2
                 tmt = 1
+                areplay(0)
             if frogskin.collidepoint(mousepos):
                 Open_ui = False
                 Game_mode = False
