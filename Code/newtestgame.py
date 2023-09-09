@@ -559,11 +559,15 @@ while master:
                 Open_ui = False
                 Game_mode = False
             if monkeyskin.collidepoint(mousepos):
+                Open_ui = False
+                Game_mode = False
                 normal_mode = True
                 v2v = False
                 can_start = 2
                 tmt = 1
             if frogskin.collidepoint(mousepos):
+                Open_ui = False
+                Game_mode = False
                 normal_mode = False
                 v2v = True
                 can_start = 4
@@ -910,7 +914,13 @@ while master:
             if isplay4%2:
                 text("Player 4: "+str(p4points),1350,60,60,white, "Jungle Adventurer")
                 text("Player 4",player4.centerx,110,50,white, "Jungle Adventurer")
+        if v2v:
+            if t1points > t2points:
+                white = blue
+            if t1points < t2points:
+                white = yellow
         text("Goal: "+str(winpoints),750,50,100,white,"Jungle Adventurer")
+        white = (255,255,255)
         cskin = False
         if keys[pygame.K_SPACE]:
             pausing = True
