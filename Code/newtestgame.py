@@ -12,7 +12,7 @@ game_selection = False
 Tic_Tac_Toe = False
 pausing = False
 
-canvas = pygame.display.set_mode((1500, 1000))
+canvas = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 canvas_rect = canvas.get_rect()
 clock = pygame.time.Clock()
 pygame.display.set_caption("Monkey Time 2.0")
