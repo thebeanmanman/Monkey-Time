@@ -12,7 +12,7 @@ game_selection = False
 Tic_Tac_Toe = False
 pausing = False
 
-canvas = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+canvas = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) 
 canvas_rect = canvas.get_rect()
 clock = pygame.time.Clock()
 pygame.display.set_caption("Monkey Time 2.0")
@@ -73,7 +73,7 @@ skinrect = pygame.Rect(1250,750,150,150)
 skinrect2 = pygame.Rect(925,750,150,150)
 gamerect = pygame.Rect(350,425,150,150)
 backrect = pygame.Rect(75,75,100,100)
-gmbackrect = pygame.Rect(75,825,100,100)
+gmbackrect = pygame.Rect(75,775,100,100)
 gmsettingrect = pygame.Rect(1325,75,100,100)
 pointselect50 = pygame.Rect(200,800,100,100)
 pointselect100 = pygame.Rect(400,800,100,100)
@@ -283,7 +283,9 @@ isplay2 = 0
 isplay3 = 0
 isplay4 = 0
 can_start = 2
-
+normal_mode = True
+v2v = False
+tmt = 1
 cskin = False
 
 while master:
@@ -394,11 +396,14 @@ while master:
 
     while not Open_ui:
         canvas.fill(black)
+        if v2v:
+            pygame.draw.rect(canvas, blue, pygame.Rect(0, 0, 750, 1000))
+            pygame.draw.rect(canvas, yellow, pygame.Rect(750, 0, 750, 1000))
         text(f"Win points = {winpoints}", 750, 100, 100, white, "arial")
-        can_start = isplay1%2 + isplay2%2 + isplay3%2 + isplay4%2
+        can_startl = isplay1%2 + isplay2%2 + isplay3%2 + isplay4%2
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
-        if can_start >= 2 and winpoints > 0:
+        if can_startl >= can_start and winpoints > 0:
             draw(start, startrect)
             if mouse:
                 if startrect.collidepoint(mousepos):
@@ -418,18 +423,18 @@ while master:
             draw(pygame.transform.scale(settings, (100, 100)), gmsettingrect)
         else:
             draw(settings, gmsettingrect)
-        if winpoints == 0:
+        if winpoints == 0*tmt:
             resetorangei()
-        elif winpoints == 50:
+        elif winpoints == 50*tmt:
             resetorangei()
             orangei1 = green
-        elif winpoints == 100:
+        elif winpoints == 100*tmt:
             resetorangei()
             orangei2 = green
-        elif winpoints == 150:
+        elif winpoints == 150*tmt:
             resetorangei()
             orangei3 = green
-        elif winpoints == 200:
+        elif winpoints == 200*tmt:
             resetorangei()
             orangei4 = green
         else:
@@ -440,10 +445,10 @@ while master:
         pygame.draw.rect(canvas, orangei3, pointselect150)
         pygame.draw.rect(canvas, orangei4, pointselect200)
         pygame.draw.rect(canvas, orangei5, pointselectRnd)
-        text("50", pointselect50.centerx, 825, 50, black, "arial")
-        text("100", pointselect100.centerx, 825, 50, black, "arial")
-        text("150", pointselect150.centerx, 825, 50, black, "arial")
-        text("200", pointselect200.centerx, 825, 50, black, "arial")
+        text(f"{50*tmt}", pointselect50.centerx, 825, 50, black, "arial")
+        text(f"{100*tmt}", pointselect100.centerx, 825, 50, black, "arial")
+        text(f"{150*tmt}", pointselect150.centerx, 825, 50, black, "arial")
+        text(f"{200*tmt}", pointselect200.centerx, 825, 50, black, "arial")
         if primary:
             draw(dice, dicerect)
         else:
@@ -462,19 +467,19 @@ while master:
                 isplay4 += 1
                 pygame.time.delay(100)
             if  pointselect50.collidepoint(mousepos):
-                winpoints = 50
+                winpoints = 50*tmt
                 pygame.time.delay(100)
             if pointselect100.collidepoint(mousepos):
-                winpoints = 100
+                winpoints = 100*tmt
                 pygame.time.delay(100)
             if pointselect150.collidepoint(mousepos):
-                winpoints = 150
+                winpoints = 150*tmt
                 pygame.time.delay(100)
             if pointselect200.collidepoint(mousepos):
-                winpoints = 200
+                winpoints = 200*tmt
                 pygame.time.delay(100)
             if pointselectRnd.collidepoint(mousepos):
-                winpoints = randint(50, 200)
+                winpoints = randint(50, 200)*tmt
                 pygame.time.delay(100)
             if backrect.collidepoint(mousepos):
                 page = True
@@ -483,19 +488,19 @@ while master:
                 Game_mode = True
                 Open_ui = True
         if  keys[pygame.K_5]:
-            winpoints = 50
+            winpoints = 50*tmt
             pygame.time.delay(100)
         if keys[pygame.K_6]:
-            winpoints = 100
+            winpoints = 100*tmt
             pygame.time.delay(100)
         if keys[pygame.K_7]:
-            winpoints = 150
+            winpoints = 150*tmt
             pygame.time.delay(100)
         if keys[pygame.K_8]:
-            winpoints = 200
+            winpoints = 200*tmt
             pygame.time.delay(100)
         if keys[pygame.K_9]:
-            winpoints = randint(50, 200)
+            winpoints = randint(50, 200)*tmt
             pygame.time.delay(100)
         if keys[pygame.K_0]:
             isplay1 += 1
@@ -543,11 +548,26 @@ while master:
         mouse = pygame.mouse.get_pressed()[0]
         mousepos = pygame.mouse.get_pos()
         keys = pygame.key.get_pressed()
+        text("Game Mode Selection", 750, 50, 150, white, "jungle adventurer")
+        draw(monkeyselect, monkeyskin)
+        text("Normal", monkeyskin.centerx, 400, 50, white, "jungle adventurer")
+        draw(frogselect, frogskin)
+        text("2 v 2", frogskin.centerx, 400, 50, white, "jungle adventurer")
         draw(backarrow, gmbackrect)
         if mouse:
             if gmbackrect.collidepoint(mousepos):
                 Open_ui = False
                 Game_mode = False
+            if monkeyskin.collidepoint(mousepos):
+                normal_mode = True
+                v2v = False
+                can_start = 2
+                tmt = 1
+            if frogskin.collidepoint(mousepos):
+                normal_mode = False
+                v2v = True
+                can_start = 4
+                tmt = 2
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
@@ -840,36 +860,56 @@ while master:
                 Banana_rect5.x = Randompos()
                 random_b = Random_b()
                 banana5 = banana(random_b[0], random_b[1])
-        if p1points >= winpoints:
-            winner = "Player 1"
-            exit = True
-            winning = True
-        if p2points >= winpoints:
-            winner = "Player 2"
-            exit = True
-            winning = True
-        if p3points >= winpoints:
-            winner = "Player 3"
-            exit = True
-            winning = True
-        if p4points >= winpoints:
-            winner = "Player 4"
-            exit = True
-            winning = True
+        if v2v:
+            t1points = p1points + p3points
+            t2points = p2points + p4points
+            if t1points >= winpoints:
+                winner = "Team 1"
+                exit = True
+                winning = True
+            if t2points >= winpoints:
+                winner = "Team 2"
+                exit = True
+                winning = True
+        else:
+            if p1points >= winpoints:
+                winner = "Player 1"
+                exit = True
+                winning = True
+            if p2points >= winpoints:
+                winner = "Player 2"
+                exit = True
+                winning = True
+            if p3points >= winpoints:
+                winner = "Player 3"
+                exit = True
+                winning = True
+            if p4points >= winpoints:
+                winner = "Player 4"
+                exit = True
+                winning = True
         draw(grass, grassrect)
         pygame.draw.rect(canvas, black, black_bar)
-        if isplay1%2:
-            text("Player 1: "+str(p1points),150,60,60,white, "Jungle Adventurer")
-            text("Player 1",player1.centerx,110,50,white, "Jungle Adventurer")
-        if isplay2%2:
-            text("Player 2: "+str(p2points),450,60,60,white, "Jungle Adventurer")
-            text("Player 2",player2.centerx,110,50,white, "Jungle Adventurer")
-        if isplay3%2:
-            text("Player 3: "+str(p3points),1100,60,60,white, "Jungle Adventurer")
-            text("Player 3",player3.centerx,110,50,white, "Jungle Adventurer")
-        if isplay4%2:
-            text("Player 4: "+str(p4points),1350,60,60,white, "Jungle Adventurer")
-            text("Player 4",player4.centerx,110,50,white, "Jungle Adventurer")
+        if v2v:
+            text("Team 1: "+str(t1points),250,60,60,blue, "Jungle Adventurer")
+            text("Team 2: "+str(t2points),1250,60,60,yellow, "Jungle Adventurer")
+            text("Player 1",player1.centerx,110,50,blue, "Jungle Adventurer")
+            text("Player 2",player2.centerx,110,50,yellow, "Jungle Adventurer")
+            text("Player 3",player3.centerx,110,50,blue, "Jungle Adventurer")
+            text("Player 4",player4.centerx,110,50,yellow, "Jungle Adventurer")
+        else:
+            if isplay1%2:
+                text("Player 1: "+str(p1points),150,60,60,white, "Jungle Adventurer")
+                text("Player 1",player1.centerx,110,50,white, "Jungle Adventurer")
+            if isplay2%2:
+                text("Player 2: "+str(p2points),450,60,60,white, "Jungle Adventurer")
+                text("Player 2",player2.centerx,110,50,white, "Jungle Adventurer")
+            if isplay3%2:
+                text("Player 3: "+str(p3points),1100,60,60,white, "Jungle Adventurer")
+                text("Player 3",player3.centerx,110,50,white, "Jungle Adventurer")
+            if isplay4%2:
+                text("Player 4: "+str(p4points),1350,60,60,white, "Jungle Adventurer")
+                text("Player 4",player4.centerx,110,50,white, "Jungle Adventurer")
         text("Goal: "+str(winpoints),750,50,100,white,"Jungle Adventurer")
         cskin = False
         if keys[pygame.K_SPACE]:
