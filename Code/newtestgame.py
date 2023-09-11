@@ -568,7 +568,7 @@ while master:
                 Open_ui = False
                 Game_mode = False
             if monkeyskin.collidepoint(mousepos):
-                Open_ui = False
+                Open_ui = False 
                 Game_mode = False
                 normal_mode = True
                 v2v = False
