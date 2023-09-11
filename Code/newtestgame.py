@@ -282,12 +282,14 @@ isplay2 = 0
 isplay3 = 0
 isplay4 = 0
 can_start = 2
-def areplay(playis):
-    global isplay1,isplay2,isplay3,isplay4
+def areplay(playis,resetwinpoints):
+    global isplay1,isplay2,isplay3,isplay4,winpoints
     isplay1 = playis
     isplay2 = playis
     isplay3 = playis
     isplay4 = playis
+    if resetwinpoints:
+        winpoints = 0
 normal_mode = True
 v2v = False
 tmt = 1
@@ -526,7 +528,7 @@ while master:
             isplay4 += 1
             pygame.time.delay(200)
         if v2v:
-            areplay(1)
+            areplay(1,False)
         if isplay1%2:
             text("Player 1 is playing",start_player1.centerx,350,50,green, "arial")
         else:
@@ -572,7 +574,7 @@ while master:
                 v2v = False
                 can_start = 2
                 tmt = 1
-                areplay(0)
+                areplay(0,True)
             if frogskin.collidepoint(mousepos):
                 Open_ui = False
                 Game_mode = False
@@ -580,6 +582,7 @@ while master:
                 v2v = True
                 can_start = 4
                 tmt = 2
+                areplay(1,True)
         if keys[pygame.K_q] and keys[pygame.K_p]:
             pygame.quit()
         for event in pygame.event.get():
