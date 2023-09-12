@@ -163,6 +163,7 @@ try:
     backarrow = pygame.image.load("Arrow.png")
     dice = pygame.image.load("dice.png")
     ticicon = pygame.image.load("ticicon.png")
+    v2img = pygame.image.load("2v2.png")
     def draw(img, pos):
         return canvas.blit(img, pos)
 except FileNotFoundError:
@@ -560,7 +561,7 @@ while master:
         text("Game Mode Selection", 750, 50, 150, white, "jungle adventurer")
         draw(monkeyselect, monkeyskin)
         text("Normal", monkeyskin.centerx, 400, 50, white, "jungle adventurer")
-        draw(frogselect, frogskin)
+        draw(v2img, frogskin)
         text("2 v 2", frogskin.centerx, 400, 50, white, "jungle adventurer")
         draw(backarrow, gmbackrect)
         if mouse:
