@@ -67,7 +67,7 @@ while True:
         text("Monkey Time", w_canvas/2, 50, 300, "white")
         text("(But Better)", w_canvas-200, 250, 50, "black")
         play_rect = pygame.Rect(w_canvas/2 -125, h_canvas/2 - 125, 250, 250)
-        pygame.draw.rect(canvas, "dark green", play_rect)
+        pygame.draw.rect(canvas, "green", play_rect)
         pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2),(w_canvas/2 - 100, h_canvas/2 - 100),(w_canvas/2 - 100, h_canvas/2 + 100)])
         pygame.draw.rect(canvas, "black", play_rect, width=5)
         if mouse or keys[pygame.K_RETURN]:
@@ -103,20 +103,22 @@ while True:
                 if pygame.Rect(w_canvas-150,h_canvas-150,100,100).collidepoint(mousepos) or keys[pygame.K_RETURN]:
                     openui = False
         for startplay in startplayer:
-            startplay.rect.x = ((startplayer.index(startplay))%2+1)*w_canvas/3-50
-            startplay.rect.y = (int(startplayer.index(startplay)/2)+1)*h_canvas/int(len(startplayer)/2+2)+50
+            startplay.rect.x = ((startplayer.index(startplay))%4+1)*w_canvas/5-50
+            startplay.rect.y = (int(startplayer.index(startplay)/4)+1)*h_canvas/int(len(startplayer)/2+2)+50
             canvas.blit(startplay.img,startplay.rect)
             if mouse:
-                if pygame.Rect(((startplayer.index(startplay))%2+1)*w_canvas/3-50,(int(startplayer.index(startplay)/2)+1)*h_canvas/int(len(startplayer)/2+2)+50,150,150).collidepoint(mousepos):
+                if pygame.Rect(((startplayer.index(startplay))%4+1)*w_canvas/5-50,(int(startplayer.index(startplay)/4)+1)*h_canvas/int(len(startplayer)/2+2)+50,150,150).collidepoint(mousepos):
                     if can:
                         startplay.playing += 1
                         can = False
             else:
                 can = True
             if startplay.playing%2:
-                text(f"Player {startplayer.index(startplay)+1} is playing",startplay.rect.centerx,startplay.rect.bottom+10,40,"green", "arial")
+                pygame.draw.rect(canvas, "green", (startplay.rect.x,startplay.rect.bottom,150,50))
+                text("Playing", startplay.rect.centerx, startplay.rect.bottom+12.5, 50, "black")
             else:
-                text(f"Player {startplayer.index(startplay)+1} is not playing",startplay.rect.centerx,startplay.rect.bottom+10,40,"red", "arial")
+                pygame.draw.rect(canvas, "orange", (startplay.rect.x,startplay.rect.bottom,150,50))
+                text("Not Playing", startplay.rect.centerx, startplay.rect.bottom+12.5, 36, "black")
         pygame.display.update()
         clock.tick(60)
     running = True
@@ -205,7 +207,7 @@ while True:
                 bananas.remove(banana)
         text(f"Winner: {winner}", w_canvas/2, 100, 200, "black")
         play_rect = pygame.Rect(w_canvas/2 -125, h_canvas/2 - 125, 250, 250)
-        pygame.draw.rect(canvas, "dark green", play_rect)
+        pygame.draw.rect(canvas, "green", play_rect)
         pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2),(w_canvas/2 - 100, h_canvas/2 - 100),(w_canvas/2 - 100, h_canvas/2 + 100)])
         pygame.draw.rect(canvas, "black", play_rect, width=5)
         if mouse or keys[pygame.K_RETURN]:
