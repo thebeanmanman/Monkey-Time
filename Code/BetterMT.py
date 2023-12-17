@@ -170,8 +170,8 @@ while True:
             player.rect.y = h_canvas-350
     while running:
         window(False)
-        canvas.blit(pygame.transform.scale(pygame.image.load("sky1.jpg").convert(), (w_canvas, h_canvas)), (0,0))
-        canvas.blit(pygame.transform.scale(pygame.image.load("grass1.jpg").convert(), (w_canvas, h_canvas/4)), (0,h_canvas-h_canvas/4))
+        canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert(), (w_canvas, h_canvas)), (0,0))
+        canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert(), (w_canvas, 250)), (0,h_canvas-250))
         pygame.draw.rect(canvas, "black", (0,0,w_canvas,150))
         text(f"Goal: {winpoints}", 750, 50, 100, "white")
         if len(bananas) < 5:
