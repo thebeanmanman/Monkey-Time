@@ -41,22 +41,28 @@ class Player():
             self.rect.x -= (10 + self.points*0.1)
         if moving[2]:
             self.rect.x += (10 + self.points*0.1)
+back_arrow = pygame.image.load("Arrow.png").convert_alpha()
+skins = ["Monkey", "Frog", "Jedi", "Sith"]
+current_skin = "Monkey"
 startplayer = []
 for i in range(4):
-    startplayer.append(Player(pygame.Rect(0,0,150,150), f"monkey{i+1}.png"))
+    startplayer.append(Player(pygame.Rect(0,0,150,150), f"{current_skin}{i+1}.png"))
 class Banana():
     def __init__(self,brandom,pos):
         self.rect = pygame.Rect(pos,0,150,150)
         if brandom == 1:
             self.value = 5
-            self.img = pygame.image.load("greenbanan.png").convert_alpha()
+            self.img = pygame.image.load(f"{current_skin} green.png").convert_alpha()
         elif brandom <= 3:
             self.value = -3
-            self.img = pygame.image.load("brownbanan.png").convert_alpha()
+            self.img = pygame.image.load(f"{current_skin} brown.png").convert_alpha()
         else:
             self.value = 1
-            self.img = pygame.image.load("banan.png").convert_alpha()
+            self.img = pygame.image.load(f"{current_skin} yellow.png").convert_alpha()
 opening = True
+skinui = False
+running = False
+winsc = False
 winpoints = 100
 while True:
     while opening:
@@ -68,16 +74,45 @@ while True:
         pygame.draw.rect(canvas, "green", play_rect)
         pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2),(w_canvas/2 - 100, h_canvas/2 - 100),(w_canvas/2 - 100, h_canvas/2 + 100)])
         pygame.draw.rect(canvas, "black", play_rect, width=5)
+        skin_rect = pygame.Rect(w_canvas-300, h_canvas-300, 150, 150)
+        canvas.blit(pygame.image.load("skin.png").convert_alpha(), skin_rect)
         if mouse or keys[pygame.K_RETURN]:
             if play_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                 opening = False
                 openui = True
+            if skin_rect.collidepoint(mousepos):
+                skinui = True
+        while skinui:
+            window("blue")
+            canvas.blit(back_arrow,(0,0,100,100))
+            if mouse:
+                if pygame.Rect((0,0,100,100)).collidepoint(mousepos):
+                    skinui = False
+            for skin in skins:
+                skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+150*int(skins.index(skin)/4),150,150)
+                if skin == current_skin:
+                    pygame.draw.rect(canvas, "green", skin_rect)
+                else:
+                    pygame.draw.rect(canvas, "orange", skin_rect)
+                canvas.blit(pygame.image.load(f"{skin}1.png").convert_alpha(), skin_rect)
+                if mouse:
+                    if skin_rect.collidepoint(mousepos):
+                        current_skin = skin
+            pygame.display.update()
+            clock.tick(60)
         pygame.display.update()
         clock.tick(60)
     can = True
+    for i in startplayer:
+        i.img = pygame.image.load(f"{current_skin}{startplayer.index(i)+1}.png").convert_alpha()
     while openui:
         window("black")
         text(f"Win Points: {winpoints}", w_canvas/2, 50, 200, "white")
+        canvas.blit(back_arrow,(0,0,100,100))
+        if mouse:
+                if pygame.Rect((0,0,100,100)).collidepoint(mousepos):
+                    openui = False
+                    opening = True
         for i in range(1,6):
             pygame.draw.rect(canvas, "orange", (w_canvas*i/6-100,h_canvas-150,100,100))
             if i == 5:
@@ -99,7 +134,7 @@ while True:
         for i in startplayer:
             canstart += i.playing%2
         if canstart >= 2:
-            canvas.blit(pygame.transform.rotate(pygame.image.load("Arrow.png").convert_alpha(),180),(w_canvas-150,h_canvas-150,100,100))
+            canvas.blit(pygame.transform.rotate(back_arrow,180),(w_canvas-150,h_canvas-150,100,100))
             if mouse or keys[pygame.K_RETURN]:
                 if pygame.Rect(w_canvas-150,h_canvas-150,100,100).collidepoint(mousepos) or keys[pygame.K_RETURN]:
                     openui = False
@@ -122,16 +157,17 @@ while True:
                 text("Not Playing", startplay.rect.centerx, startplay.rect.bottom+12.5, 36, "black")
         pygame.display.update()
         clock.tick(60)
-    running = True
-    pausing = False
-    players = []
-    bananas = []
-    for startplay in startplayer:
-        if startplay.playing%2:
-            players.append(startplay)
-    for player in players:
-        player.rect.x = ((players.index(player))+1)*w_canvas/(len(players)+1)-50
-        player.rect.y = h_canvas-350
+    if not opening:
+        running = True
+        pausing = False
+        players = []
+        bananas = []
+        for startplay in startplayer:
+            if startplay.playing%2:
+                players.append(startplay)
+        for player in players:
+            player.rect.x = ((players.index(player))+1)*w_canvas/(len(players)+1)-50
+            player.rect.y = h_canvas-350
     while running:
         window(False)
         canvas.blit(pygame.transform.scale(pygame.image.load("sky1.jpg").convert(), (w_canvas, h_canvas)), (0,0))
@@ -191,10 +227,11 @@ while True:
                 clock.tick(60)
         pygame.display.update()
         clock.tick(60)
-    winsc = True
-    nana_rain = 0
-    for startplay in startplayer:
-        startplay.points = 0
+    if not opening:
+        winsc = True
+        nana_rain = 0
+        for startplay in startplayer:
+            startplay.points = 0
     while winsc:
         window("yellow")
         nana_rain += 1
