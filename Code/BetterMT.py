@@ -41,8 +41,8 @@ class Player():
             self.rect.x -= (10 + self.points*0.1)
         if moving[2]:
             self.rect.x += (10 + self.points*0.1)
-player1 = Player(pygame.Rect(0,0,150,150), "monkeman21.png")
-player2 = Player(pygame.Rect(0,0,150,150), "monkeman1.png")
+player1 = Player(pygame.Rect(0,0,150,150), "monkey1.png")
+player2 = Player(pygame.Rect(0,0,150,150), "monkey2.png")
 player3 = Player(pygame.Rect(0,0,150,150), "monkey3.png")
 player4 = Player(pygame.Rect(0,0,150,150), "monkey4.png")
 startplayer = (player1, player2, player3, player4)

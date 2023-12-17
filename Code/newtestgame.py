@@ -89,8 +89,8 @@ primeskin = pygame.Rect(1000, 250, 150, 150)
 def Skin(sken):
     global player1img, player2img, player3img, player4img, yellowe, blacke, bluee, sky, grass, swselect
     if sken == "menkey":
-        player1img = pygame.image.load("monkeman21.png").convert_alpha()
-        player2img = pygame.image.load("monkeman1.png").convert_alpha()
+        player1img = pygame.image.load("monkey1.png").convert_alpha()
+        player2img = pygame.image.load("monkey2.png").convert_alpha()
         player3img = pygame.image.load("monkey3.png").convert_alpha()
         player4img = pygame.image.load("monkey4.png").convert_alpha()
         yellowe = pygame.image.load("banan.png").convert_alpha()
@@ -148,7 +148,7 @@ primary = True
 
 
 try:
-    monkeyselect = pygame.image.load("monkeman21.png").convert_alpha()
+    monkeyselect = pygame.image.load("monkey1.png").convert_alpha()
     frogselect = pygame.image.load("frog1.png").convert_alpha()
     swselect = pygame.image.load("luke.png").convert_alpha()
     start = pygame.image.load("start.png").convert_alpha()
