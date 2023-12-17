@@ -41,11 +41,9 @@ class Player():
             self.rect.x -= (10 + self.points*0.1)
         if moving[2]:
             self.rect.x += (10 + self.points*0.1)
-player1 = Player(pygame.Rect(0,0,150,150), "monkey1.png")
-player2 = Player(pygame.Rect(0,0,150,150), "monkey2.png")
-player3 = Player(pygame.Rect(0,0,150,150), "monkey3.png")
-player4 = Player(pygame.Rect(0,0,150,150), "monkey4.png")
-startplayer = (player1, player2, player3, player4)
+startplayer = []
+for i in range(4):
+    startplayer.append(Player(pygame.Rect(0,0,150,150), f"monkey{i+1}.png"))
 class Banana():
     def __init__(self,brandom,pos):
         self.rect = pygame.Rect(pos,0,150,150)
@@ -97,7 +95,10 @@ while True:
                 if mouse:
                     if pygame.Rect(w_canvas*i/6-100,h_canvas-150,100,100).collidepoint(mousepos):
                         winpoints = i*50
-        if (player1.playing%2+player2.playing%2+player3.playing%2+player4.playing%2) >= 2:
+        canstart = 0
+        for i in startplayer:
+            canstart += i.playing%2
+        if canstart >= 2:
             canvas.blit(pygame.transform.rotate(pygame.image.load("Arrow.png").convert_alpha(),180),(w_canvas-150,h_canvas-150,100,100))
             if mouse or keys[pygame.K_RETURN]:
                 if pygame.Rect(w_canvas-150,h_canvas-150,100,100).collidepoint(mousepos) or keys[pygame.K_RETURN]:
