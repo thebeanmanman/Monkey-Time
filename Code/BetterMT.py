@@ -20,11 +20,13 @@ def window(background):
         if event.type == pygame.QUIT:
             pygame.quit()
 window(False)
-def text(text, x, y, si, col, font="jungle adventurer"):
-    font = pygame.font.SysFont(font,si)
+def text(text, x, y, si, col, font="jungle adventurer", shadow=False):
+    font = pygame.font.SysFont(font,si) 
+    if shadow:
+        texting = font.render(text, True, "black")
+        canvas.blit(texting, (x-texting.get_width()/2+si/30,y+si/30))
     texting = font.render(text, True, col)
-    x -= texting.get_width()/2
-    canvas.blit(texting, (x,y))
+    canvas.blit(texting, (x-texting.get_width()/2,y))
 class Player():
     def __init__(self,rect,img):
         self.rect = rect
@@ -42,10 +44,10 @@ class Player():
         if moving[2]:
             self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
-skins = ["Monkey", "Frog", "Jedi", "Sith"]
+skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers"]
 current_skin = "Monkey"
 startplayer = []
-for i in range(5):
+for i in range(8):
     startplayer.append(Player(pygame.Rect(0,0,150,150), f"{current_skin}{i+1}.png"))
 class Banana():
     def __init__(self,brandom,pos):
@@ -67,9 +69,8 @@ winpoints = 100
 while True:
     while opening:
         window("blue")
-        text("Monkey Time", w_canvas/2+10, 50+10, 300, "black")
-        text("Monkey Time", w_canvas/2, 50, 300, "white")
-        text("(But Better)", w_canvas-200, 250, 50, "black")
+        text("Monkey Time", w_canvas/2, 50, 300, "white", shadow=True)
+        text("(But Better)", w_canvas-200, 250, 50, "white",shadow=True)
         play_rect = pygame.Rect(w_canvas/2 -125, h_canvas/2 - 125, 250, 250)
         pygame.draw.rect(canvas, "green", play_rect)
         pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2),(w_canvas/2 - 100, h_canvas/2 - 100),(w_canvas/2 - 100, h_canvas/2 + 100)])
@@ -89,7 +90,8 @@ while True:
                 if pygame.Rect((0,0,100,100)).collidepoint(mousepos):
                     skinui = False
             for skin in skins:
-                skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+150*int(skins.index(skin)/4),150,150)
+                skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+200*int(skins.index(skin)/4),150,150)
+                text(skin, skin_rect.centerx, skin_rect.y+160, 50, "white", shadow=True)
                 if skin == current_skin:
                     pygame.draw.rect(canvas, "green", skin_rect)
                 else:
@@ -98,6 +100,7 @@ while True:
                 if mouse:
                     if skin_rect.collidepoint(mousepos):
                         current_skin = skin
+            text("Skin Selection", w_canvas/2, 50, 200, "white", shadow=True)
             pygame.display.update()
             clock.tick(60)
         pygame.display.update()
@@ -140,10 +143,10 @@ while True:
                     openui = False
         for startplay in startplayer:
             startplay.rect.x = ((startplayer.index(startplay))%4+1)*w_canvas/5-50
-            startplay.rect.y = (int(startplayer.index(startplay)/4)+1)*h_canvas/int(len(startplayer)/2+2)+50
+            startplay.rect.y = (int(startplayer.index(startplay)/4))*250+200
             canvas.blit(startplay.img,startplay.rect)
             if mouse:
-                if pygame.Rect(((startplayer.index(startplay))%4+1)*w_canvas/5-50,(int(startplayer.index(startplay)/4)+1)*h_canvas/int(len(startplayer)/2+2)+50,150,150).collidepoint(mousepos):
+                if pygame.Rect(((startplayer.index(startplay))%4+1)*w_canvas/5-50,(int(startplayer.index(startplay)/4))*250+200,150,150).collidepoint(mousepos):
                     if can:
                         startplay.playing += 1
                         can = False
@@ -173,7 +176,7 @@ while True:
         canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
         canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
         pygame.draw.rect(canvas, "black", (0,0,w_canvas,150))
-        text(f"Goal: {winpoints}", 750, 50, 100, "white")
+        text(f"Goal: {winpoints}", w_canvas/2, 50, 100, "white")
         if len(bananas) < 5:
             bananas.append(Banana(randint(1,10),randint(0,w_canvas-150)))
         for banana in bananas:
@@ -181,7 +184,7 @@ while True:
             banana.rect.y += 10
             if banana.rect.y >= h_canvas:
                 bananas.remove(banana)
-        controls = [[keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d]],[keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l]],[keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b]],[keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]],[keys[pygame.K_2], keys[pygame.K_1], keys[pygame.K_3]]]
+        controls = [[keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d]],[keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l]],[keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b]],[keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]],[keys[pygame.K_2], keys[pygame.K_1], keys[pygame.K_3]],[keys[pygame.K_5], keys[pygame.K_4], keys[pygame.K_6]],[keys[pygame.K_8], keys[pygame.K_7], keys[pygame.K_9]],[keys[pygame.K_MINUS], keys[pygame.K_0], keys[pygame.K_EQUALS]]]
         for player in players:
             canvas.blit(player.img,player.rect)
             text(f"Player {startplayer.index(player)+1}: {player.points}", player.rect.centerx, 110, 50, "white")
