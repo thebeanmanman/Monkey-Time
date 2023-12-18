@@ -45,7 +45,7 @@ back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 skins = ["Monkey", "Frog", "Jedi", "Sith"]
 current_skin = "Monkey"
 startplayer = []
-for i in range(4):
+for i in range(5):
     startplayer.append(Player(pygame.Rect(0,0,150,150), f"{current_skin}{i+1}.png"))
 class Banana():
     def __init__(self,brandom,pos):
@@ -170,8 +170,8 @@ while True:
             player.rect.y = h_canvas-350
     while running:
         window(False)
-        canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert(), (w_canvas, h_canvas)), (0,0))
-        canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert(), (w_canvas, 250)), (0,h_canvas-250))
+        canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
+        canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
         pygame.draw.rect(canvas, "black", (0,0,w_canvas,150))
         text(f"Goal: {winpoints}", 750, 50, 100, "white")
         if len(bananas) < 5:
@@ -181,7 +181,7 @@ while True:
             banana.rect.y += 10
             if banana.rect.y >= h_canvas:
                 bananas.remove(banana)
-        controls = [[keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d]],[keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l]],[keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b]],[keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]]]
+        controls = [[keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d]],[keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l]],[keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b]],[keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]],[keys[pygame.K_2], keys[pygame.K_1], keys[pygame.K_3]]]
         for player in players:
             canvas.blit(player.img,player.rect)
             text(f"Player {startplayer.index(player)+1}: {player.points}", player.rect.centerx, 110, 50, "white")
