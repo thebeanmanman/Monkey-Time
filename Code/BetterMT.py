@@ -27,6 +27,31 @@ def text(text, x, y, si, col, font="jungle adventurer", shadow=False):
         canvas.blit(texting, (x-texting.get_width()/2+si/30,y+si/30))
     texting = font.render(text, True, col)
     canvas.blit(texting, (x-texting.get_width()/2,y))
+def check(x):
+            for row in range(len(board)):
+                ac_win = 0
+                dw_win = 0
+                di_win = 0
+                for column in range(len(board)):
+                    if board[row][column] == x:
+                        ac_win += 1
+                    else:
+                        ac_win = 0
+                    if board[column][row] == x:
+                        dw_win += 1
+                    else:
+                        dw_win = 0
+                    if (3-row == 3) and (3-column == 3):
+                        w_di = 1
+                        for i in range(2):
+                            for r in range(len(board)):
+                                if board[row-r][column-r] == x:
+                                    di_win += 1
+                            if di_win == 3:
+                                return x
+                            w_di = -1
+                    if ac_win == 3 or dw_win == 3:
+                        return x
 class Player():
     def __init__(self,rect,img):
         self.rect = rect
@@ -44,8 +69,10 @@ class Player():
         if moving[2]:
             self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
-skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers"]
+skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC"]
+games = ["Tic Tac Toe"]
 current_skin = "Monkey"
+game_mode = False
 startplayer = []
 for i in range(8):
     startplayer.append(Player(pygame.Rect(0,0,150,150), f"{current_skin}{i+1}.png"))
@@ -62,7 +89,9 @@ class Banana():
             self.value = 1
             self.img = pygame.image.load(f"{current_skin} yellow.png").convert_alpha()
 opening = True
-skinui = False
+skin_selection = False
+game_selection = False
+open_ui = False
 running = False
 winsc = False
 winpoints = 100
@@ -75,20 +104,25 @@ while True:
         pygame.draw.rect(canvas, "green", play_rect)
         pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2),(w_canvas/2 - 100, h_canvas/2 - 100),(w_canvas/2 - 100, h_canvas/2 + 100)])
         pygame.draw.rect(canvas, "black", play_rect, width=5)
+        game_rect = pygame.Rect(w_canvas/2-400, h_canvas/2-75, 150, 150)
+        canvas.blit(pygame.image.load("gameicon.png"), game_rect)
         skin_rect = pygame.Rect(w_canvas-300, h_canvas-300, 150, 150)
         canvas.blit(pygame.image.load("skin.png").convert_alpha(), skin_rect)
         if mouse or keys[pygame.K_RETURN]:
             if play_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                 opening = False
-                openui = True
+                open_ui = True
+        if mouse:
             if skin_rect.collidepoint(mousepos):
-                skinui = True
-        while skinui:
+                skin_selection = True
+            if game_rect.collidepoint(mousepos):
+                game_selection = True
+        while skin_selection:
             window("blue")
             canvas.blit(back_arrow,(0,0,100,100))
             if mouse:
                 if pygame.Rect((0,0,100,100)).collidepoint(mousepos):
-                    skinui = False
+                    skin_selection = False
             for skin in skins:
                 skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+200*int(skins.index(skin)/4),150,150)
                 text(skin, skin_rect.centerx, skin_rect.y+160, 50, "white", shadow=True)
@@ -103,18 +137,36 @@ while True:
             text("Skin Selection", w_canvas/2, 50, 200, "white", shadow=True)
             pygame.display.update()
             clock.tick(60)
+        while game_selection:
+            window("blue")
+            canvas.blit(back_arrow,(0,0,100,100))
+            if mouse:
+                if pygame.Rect((0,0,100,100)).collidepoint(mousepos):
+                    game_selection = False
+            for game in games:
+                game_rect = pygame.Rect(w_canvas/5*(((games.index(game))%4)+1)-75,250+200*int(games.index(game)/4),150,150)
+                text(game, game_rect.centerx, game_rect.y+160, 50, "white", shadow=True)
+                canvas.blit(pygame.image.load(f"{game}.png").convert_alpha(), game_rect)
+                if mouse:
+                    if game_rect.collidepoint(mousepos):
+                        game_mode = game
+                        game_selection = False
+                        opening = False
+            text("Game Selection", w_canvas/2, 50, 200, "white", shadow=True)
+            pygame.display.update()
+            clock.tick(60)
         pygame.display.update()
         clock.tick(60)
     can = True
     for i in startplayer:
         i.img = pygame.image.load(f"{current_skin}{startplayer.index(i)+1}.png").convert_alpha()
-    while openui:
+    while open_ui:
         window("black")
         text(f"Win Points: {winpoints}", w_canvas/2, 50, 200, "white")
         canvas.blit(back_arrow,(0,0,100,100))
         if mouse:
                 if pygame.Rect((0,0,100,100)).collidepoint(mousepos):
-                    openui = False
+                    open_ui = False
                     opening = True
         for i in range(1,6):
             pygame.draw.rect(canvas, "orange", (w_canvas*i/6-100,h_canvas-150,100,100))
@@ -123,9 +175,12 @@ while True:
                     pygame.draw.rect(canvas, "green", (w_canvas*i/6-100,h_canvas-150,100,100))
                 text("RND", w_canvas*i/6-50, h_canvas-112.5, 50, "black")
                 if mouse:
-                    if pygame.Rect(w_canvas*i/6-100,h_canvas-150,100,100).collidepoint(mousepos):
+                    if pygame.Rect(w_canvas*i/6-100,h_canvas-150,100,100).collidepoint(mousepos) and can:
                         winpoints = randint(50,200)
                         pygame.time.delay(100)
+                        can = False
+                else:
+                    can = True
             else:
                 if i*50 == winpoints:
                     pygame.draw.rect(canvas, "green", (w_canvas*i/6-100,h_canvas-150,100,100))
@@ -140,7 +195,7 @@ while True:
             canvas.blit(pygame.transform.rotate(back_arrow,180),(w_canvas-150,h_canvas-150,100,100))
             if mouse or keys[pygame.K_RETURN]:
                 if pygame.Rect(w_canvas-150,h_canvas-150,100,100).collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    openui = False
+                    open_ui = False
         for startplay in startplayer:
             startplay.rect.x = ((startplayer.index(startplay))%4+1)*w_canvas/5-50
             startplay.rect.y = (int(startplayer.index(startplay)/4))*250+200
@@ -160,7 +215,7 @@ while True:
                 text("Not Playing", startplay.rect.centerx, startplay.rect.bottom+12.5, 36, "black")
         pygame.display.update()
         clock.tick(60)
-    if not opening:
+    if not (opening or game_mode):
         running = True
         pausing = False
         players = []
@@ -230,7 +285,7 @@ while True:
                 clock.tick(60)
         pygame.display.update()
         clock.tick(60)
-    if not opening:
+    if not (opening or game_mode):
         winsc = True
         nana_rain = 0
         for startplay in startplayer:
@@ -254,6 +309,62 @@ while True:
         if mouse or keys[pygame.K_RETURN]:
             if play_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                 winsc = False
-                openui = True
+                open_ui = True
         pygame.display.update()
         clock.tick(60)
+    opp = 1
+    scores = [0,0]
+    while game_mode == "Tic Tac Toe":
+        window("white")
+        pygame.draw.rect(canvas, "blue", (w_canvas/2-h_canvas/2,0,h_canvas,h_canvas))
+        board = [["","",""],["","",""],["","",""]]
+        turn = randint(0,1)
+        can = False
+        while True:
+            window(False)
+            for i in range(1,3):
+                pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2,h_canvas/3*i-(h_canvas/18.4)/2,h_canvas,h_canvas/18.4))
+                pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2+h_canvas/3*i-(h_canvas/18.4)/2,0,h_canvas/18.4,h_canvas))
+            available = 0
+            for row in range(len(board)):
+                for column in range(len(board)):
+                    if board[row][column]:
+                        canvas.blit(pygame.image.load(f"{current_skin}{board[row][column]}.png"),(w_canvas/2-h_canvas/2+row*h_canvas/3+75, column*h_canvas/3+75, h_canvas/3, h_canvas/3))
+                    if mouse or (not opp%2 and not turn%2):
+                        if pygame.Rect(w_canvas/2-h_canvas/2+row*h_canvas/3, column*h_canvas/3, h_canvas/3, h_canvas/3).collidepoint(mousepos) or (not opp%2 and not turn%2):
+                            if not board[row][column] and can:
+                                if turn%2 or opp%2:
+                                    board[row][column] = str(turn%2 + 1)
+                                    turn += 1    
+                                    allow = False
+                                elif allow:
+                                    while True:
+                                        row = randint(0,2)
+                                        column = randint(0,2)
+                                        if not board[row][column]:
+                                            board[row][column] = str(turn%2 + 1)
+                                            turn += 1
+                                            break
+                    if board[row][column]:
+                        available += 1
+            if mouse:
+                if pygame.Rect(w_canvas-100, 0, 100, 100).collidepoint(mousepos) and can:
+                    break 
+                if pygame.Rect(w_canvas-100, h_canvas-100, 100, 100).collidepoint(mousepos) and can:
+                    opp += 1 
+                can = False
+            else:
+                can = True
+            pygame.draw.rect(canvas, "green", (w_canvas-100, 0, 100, 100))
+            pygame.draw.rect(canvas, "red", (w_canvas-100, h_canvas-100, 100, 100))
+            text(str(scores[0]), 50, h_canvas/2, 200, "black")
+            text(str(scores[1]), w_canvas-150, h_canvas/2, 200, "black")
+            winner = check(str((turn-1)%2+1))
+            allow = True
+            if winner:
+                scores[int(winner)-1] += 1
+                break
+            elif available == 9:
+                break
+            pygame.display.update()
+            clock.tick(60)
