@@ -1,5 +1,5 @@
 import pygame
-from random import randint
+from random import randint, shuffle
 pygame.init()
 canvas = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) 
 canvas_rect = canvas.get_rect()
@@ -81,7 +81,7 @@ class Player():
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
 skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC"]
-games = ["Tic Tac Toe", "Flappy Bird"]
+games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig"]
 current_skin = "Monkey"
 game_mode = False
 startplayer = []
@@ -131,7 +131,7 @@ while True:
             window("blue")
             draw(back_arrow,back_rect)
             if mouse:
-                if pygame.Rect(back_rect).collidepoint(mousepos):
+                if back_rect.collidepoint(mousepos):
                     skin_selection = False
             for skin in skins:
                 skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+200*int(skins.index(skin)/4),150,150)
@@ -151,7 +151,7 @@ while True:
             window("blue")
             draw(back_arrow,back_rect)
             if mouse:
-                if pygame.Rect(back_rect).collidepoint(mousepos):
+                if back_rect.collidepoint(mousepos):
                     game_selection = False
             for game in games:
                 game_rect = pygame.Rect(w_canvas/5*(((games.index(game))%4)+1)-75,250+200*int(games.index(game)/4),150,150)
@@ -170,16 +170,15 @@ while True:
     can = True
     for i in startplayer:
         i.img = pygame.image.load(f"{current_skin}{startplayer.index(i)+1}.png").convert_alpha()
-    while game_mode == "MT" or game_mode == "Flappy Bird":
+    while game_mode == "MT" or game_mode == "Flappy Bird" or game_mode == "Greedy Pig":
         window("black")
         draw(back_arrow,back_rect)
         if mouse:
-                if pygame.Rect(back_rect).collidepoint(mousepos):
+                if back_rect.collidepoint(mousepos):
                     opening = True
                     game_mode = False
-        cnastart = 1
         canstart = 0
-        if game_mode == "MT":
+        if game_mode == "MT" or game_mode == "Greedy Pig":
             text(f"Win Points: {winpoints}", w_canvas/2, 50, 200, "white")
             for i in range(1,6):
                 pygame.draw.rect(canvas, "orange", (w_canvas*i/6-100,h_canvas-150,100,100))
@@ -202,14 +201,18 @@ while True:
                         if pygame.Rect(w_canvas*i/6-100,h_canvas-150,100,100).collidepoint(mousepos):
                             winpoints = i*50
             cnastart = 2
+        else:
+            cnastart = 1
         for i in startplayer:
             canstart += i.playing%2
         if canstart >= cnastart:
             draw(pygame.transform.rotate(back_arrow,180),(w_canvas-150,h_canvas-150,100,100))
             if mouse or keys[pygame.K_RETURN]:
                 if pygame.Rect(w_canvas-150,h_canvas-150,100,100).collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    if game_mode != "Flappy Bird":
-                        game_mode = "MT"
+                    players = []
+                    for startplay in startplayer:
+                        if startplay.playing%2:
+                            players.append(startplay)
                     break
         for startplay in startplayer:
             startplay.rect.x = ((startplayer.index(startplay))%4+1)*w_canvas/5-50
@@ -233,11 +236,7 @@ while True:
     if game_mode == "MT":
         running = True
         pausing = False
-        players = []
         bananas = []
-        for startplay in startplayer:
-            if startplay.playing%2:
-                players.append(startplay)
         for player in players:
             player.rect.x = ((players.index(player))+1)*w_canvas/(len(players)+1)-50
             player.rect.y = h_canvas-350
@@ -374,7 +373,7 @@ while True:
                         break 
                     if pygame.Rect(w_canvas-100, h_canvas-100, 100, 100).collidepoint(mousepos) and can:
                         opp += 1 
-                    if pygame.Rect(back_rect).collidepoint(mousepos):
+                    if back_rect.collidepoint(mousepos):
                         game_mode = False
                         opening = True
                         break
@@ -400,13 +399,9 @@ while True:
                 clock.tick(60)
     if game_mode == "Flappy Bird":
         pipes = []
-        players = []
         score = 0
         pipetimer = 0
         pausing = False
-        for startplay in startplayer:
-            if startplay.playing%2:
-                players.append(startplay)
         for player in players:
             player.rect.x = w_canvas/4-50
             player.rect.y = h_canvas/2-175
@@ -495,3 +490,73 @@ while True:
                     gamecard = False
             pygame.display.update()
             clock.tick(60)
+    if game_mode == "Greedy Pig":
+        shuffle(players)
+        scores = []
+        for player in players:
+            scores.append(0)
+        while game_mode == "Greedy Pig":
+            for a_player in players:
+                greed_num = randint(1,6)
+                roll = 0
+                a_num = 0
+                while True:
+                    window("white")
+                    for player in players:
+                        player.rect.y = ((players.index(player))+1)*h_canvas/(len(players)+1)-50
+                        player.rect.x = 100
+                        draw(player.img, player.rect)
+                        text(str(scores[players.index(player)]), 300, ((players.index(player))+1)*h_canvas/(len(players)+1), 100, "black")
+                        if player == a_player:
+                            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin}{startplayer.index(player)+1}.png").convert_alpha(), (400, 400)), (w_canvas-400,h_canvas/2 -150))
+                    endrect = pygame.Rect(w_canvas/2+50, h_canvas-150, 300, 150)
+                    pygame.draw.rect(canvas, "red", endrect)
+                    text("End Turn", endrect.centerx, endrect.centery-25, 100, "black")
+                    canvas.blit(pygame.transform.scale(pygame.image.load("dice.png").convert_alpha(), (150, 150)), (w_canvas/2-200,h_canvas-150))
+                    draw(back_arrow, back_rect)
+                    if roll:
+                        draw(pygame.image.load(f"Dice{roll}.png"), pygame.Rect(w_canvas/2-112.5,h_canvas/2-112.5,225,225))
+                    if mouse:
+                        if endrect.collidepoint(mousepos) and can:
+                            scores[players.index(a_player)] += a_num
+                            break
+                        if back_rect.collidepoint(mousepos):
+                            game_mode = False 
+                            opening = True
+                            break
+                        if pygame.Rect(w_canvas/2-200, h_canvas-150, 150, 150).collidepoint(mousepos) and can:
+                            can = False
+                            roll = randint(1,6)
+                            if roll == greed_num:
+                                break
+                            else:
+                                a_num += roll
+                    else:
+                        can = True
+                    text(f"Goal: {winpoints}", w_canvas/2, 50, 200, "black") 
+                    text(f"Greed number: {greed_num}", w_canvas/2, 200, 125, "black")
+                    text(str(a_num), w_canvas-200, 200, 125, "black")
+                    pygame.display.update()
+                    clock.tick(60)
+            if max(scores) >= winpoints:
+                while True:
+                    window(False)
+                    canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert_alpha(), (w_canvas*2/3, h_canvas*2/3)), (w_canvas/6,h_canvas/6))
+                    canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert_alpha(), (w_canvas*2/3, 250*2/3)), (w_canvas/6,(h_canvas)*2/3))
+                    text("Winner:", w_canvas/2, 40, 200, "black") 
+                    text("Play again?", w_canvas/2, 160, 100, "black") 
+                    draw(back_arrow, back_rect)
+                    canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin}{startplayer.index(players[scores.index(max(scores))])+1}.png").convert_alpha(), (400, 400)), (w_canvas/2-200,h_canvas/2-200))
+                    if mouse:
+                        if pygame.Rect(w_canvas/2-200,h_canvas/2-200,400,400).collidepoint(mousepos):
+                            shuffle(players)
+                            scores = []
+                            for player in players:
+                                scores.append(0)
+                            break
+                        if back_rect.collidepoint(mousepos):
+                            game_mode = False 
+                            opening = True
+                            break
+                    pygame.display.update()
+                    clock.tick(60)
