@@ -519,6 +519,7 @@ while True:
                     if mouse:
                         if endrect.collidepoint(mousepos) and can:
                             scores[players.index(a_player)] += a_num
+                            can = False
                             break
                         if back_rect.collidepoint(mousepos):
                             game_mode = False 
