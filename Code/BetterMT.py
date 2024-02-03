@@ -10,23 +10,19 @@ pygame.display.set_caption("Monkey Time")
 hitbox = 0
 def window(background):
     global keys, mouse, mousepos, hitbox
-    if background:
-        canvas.fill(background)
+    if background: canvas.fill(background)
     keys = pygame.key.get_pressed()
     mouse = pygame.mouse.get_pressed()[0]
     mousepos = pygame.mouse.get_pos()
-    if keys[pygame.K_ESCAPE]:
-        pygame.quit()
-    if keys[pygame.K_h]:
-        hitbox += 1
+    if keys[pygame.K_ESCAPE]: pygame.quit()
+    if keys[pygame.K_h]: hitbox += 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
 window(False)
 def draw(img, rect):
     canvas.blit(img, rect)
-    if hitbox%2:
-        pygame.draw.rect(canvas, "red", rect, width=5)
+    if hitbox%2: pygame.draw.rect(canvas, "red", rect, width=5)
 def text(text, x, y, si, col, font="jungle adventurer", shadow=False):
     font = pygame.font.SysFont(font,si) 
     if shadow:
@@ -39,14 +35,10 @@ def check(x):
                 ac_win = 0
                 dw_win = 0
                 for column in range(len(board)):
-                    if board[row][column] == x:
-                        ac_win += 1
-                    else:
-                        ac_win = 0
-                    if board[column][row] == x:
-                        dw_win += 1
-                    else:
-                        dw_win = 0
+                    if board[row][column] == x: ac_win += 1
+                    else: ac_win = 0
+                    if board[column][row] == x: dw_win += 1
+                    else: dw_win = 0
                     if (not row) and (not column):
                         for i in range(-1,2,2):
                             di_win = 0
@@ -80,7 +72,7 @@ class Player():
             self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
-skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC"]
+skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars"]
 games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig"]
 current_skin = "Monkey"
 game_mode = False
@@ -185,14 +177,13 @@ while True:
                 if i == 5:
                     if winpoints%50:
                         pygame.draw.rect(canvas, "green", (w_canvas*i/6-100,h_canvas-150,100,100))
-                    text("RND", w_canvas*i/6-50, h_canvas-112.5, 50, "black")
+                    canvas.blit(pygame.transform.scale(pygame.image.load("dice.png").convert_alpha(), (100, 100)), (w_canvas*i/6-100,h_canvas-150))
                     if mouse:
                         if pygame.Rect(w_canvas*i/6-100,h_canvas-150,100,100).collidepoint(mousepos) and can:
                             winpoints = randint(50,200)
                             pygame.time.delay(100)
                             can = False
-                    else:
-                        can = True
+                    else: can = True
                 else:
                     if i*50 == winpoints:
                         pygame.draw.rect(canvas, "green", (w_canvas*i/6-100,h_canvas-150,100,100))
@@ -203,8 +194,7 @@ while True:
             cnastart = 2
         else:
             cnastart = 1
-        for i in startplayer:
-            canstart += i.playing%2
+        for i in startplayer: canstart += i.playing%2
         if canstart >= cnastart:
             draw(pygame.transform.rotate(back_arrow,180),(w_canvas-150,h_canvas-150,100,100))
             if mouse or keys[pygame.K_RETURN]:
@@ -223,8 +213,7 @@ while True:
                     if can:
                         startplay.playing += 1
                         can = False
-            else:
-                can = True
+            else: can = True
             if startplay.playing%2:
                 pygame.draw.rect(canvas, "green", (startplay.rect.x,startplay.rect.bottom,150,50))
                 text("Playing", startplay.rect.centerx, startplay.rect.bottom+12.5, 50, "black")
@@ -283,8 +272,7 @@ while True:
                     if can:
                         pausing = True
                         can = False
-                else:
-                    can = True
+                else: can = True
                 while pausing:
                     window(False)
                     pygame.draw.rect(canvas, "black", (w_canvas/2-300, h_canvas/2-300, 600, 600))
@@ -301,8 +289,7 @@ while True:
                         if can:
                             pausing = False
                             can = False
-                    else:
-                        can = True
+                    else: can = True
                     pygame.display.update()
                     clock.tick(60)
             pygame.display.update()
@@ -378,8 +365,7 @@ while True:
                         opening = True
                         break
                     can = False
-                else:
-                    can = True
+                else: can = True
                 pygame.draw.rect(canvas, "green", (w_canvas-100, 0, 100, 100))
                 text("#", w_canvas-50, -20, 200, "black")
                 pygame.draw.rect(canvas, "red", (w_canvas-100, h_canvas-100, 100, 100))
@@ -445,6 +431,7 @@ while True:
                 if len(players) == 1:
                     winner = startplayer.index(player)+1
             if not len(players):
+                gamecard = True
                 break
             text(str(int(score)), w_canvas/2, 50, 200, "black", "jungleadventurer")
             pipetimer += 1
@@ -458,23 +445,20 @@ while True:
                 if can:
                     pausing = True
                     can = False
-            else: 
-                can = True
+            else: can = True
             while pausing:
                 window(False)
                 if keys[pygame.K_SPACE]:
                     if can:
                         pausing = False
                         can = False
-                else: 
-                    can = True
+                else: can = True
                 pygame.draw.rect(canvas, "black", (w_canvas/3+50,h_canvas/2-300,100,600))
                 pygame.draw.rect(canvas, "black", (w_canvas/3*2-150,h_canvas/2-300,100,600))
                 pygame.display.update()
                 clock.tick(60)
             pygame.display.update()
             clock.tick(60)
-        gamecard = True
         while gamecard:
             window(False)
             pygame.draw.rect(canvas, "brown", (w_canvas/2 -300, h_canvas/2 -250, 600, 600))
@@ -532,8 +516,7 @@ while True:
                                 break
                             else:
                                 a_num += roll
-                    else:
-                        can = True
+                    else: can = True
                     text(f"Goal: {winpoints}", w_canvas/2, 50, 200, "black") 
                     text(f"Greed number: {greed_num}", w_canvas/2, 200, 125, "black")
                     text(str(a_num), w_canvas-200, 200, 125, "black")
