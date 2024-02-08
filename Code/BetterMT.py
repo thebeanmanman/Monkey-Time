@@ -72,7 +72,7 @@ class Player():
             self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
-skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars"]
+skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft"]
 games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig"]
 current_skin = "Monkey"
 game_mode = False
@@ -469,8 +469,8 @@ while True:
             pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2 + 200),(w_canvas/2 - 100, h_canvas/2 +100),(w_canvas/2 - 100, h_canvas/2 + 300)])
             pygame.draw.rect(canvas, "black", play_rect, width=5)
             draw(back_arrow, back_rect)
-            if mouse:
-                if play_rect.collidepoint(mousepos) or back_rect.collidepoint(mousepos):
+            if mouse or keys[pygame.K_RETURN]:
+                if play_rect.collidepoint(mousepos) or back_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                     gamecard = False
             pygame.display.update()
             clock.tick(60)
