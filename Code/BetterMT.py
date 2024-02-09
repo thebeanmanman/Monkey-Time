@@ -8,14 +8,19 @@ h_canvas = canvas_rect.bottom
 clock = pygame.time.Clock()
 pygame.display.set_caption("Monkey Time")
 hitbox = 0
+cah = True
 def window(background):
-    global keys, mouse, mousepos, hitbox
+    global keys, mouse, mousepos, hitbox, cah
     if background: canvas.fill(background)
     keys = pygame.key.get_pressed()
     mouse = pygame.mouse.get_pressed()[0]
     mousepos = pygame.mouse.get_pos()
     if keys[pygame.K_ESCAPE]: pygame.quit()
-    if keys[pygame.K_h]: hitbox += 1
+    if keys[pygame.K_h]: 
+        if cah: 
+            hitbox += 1
+            cah = False
+    else: cah = True
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -53,6 +58,11 @@ class Pipe():
     def __init__(self, h, y):
         self.rect = pygame.Rect(w_canvas, y, 75, h)
         self.cna = True
+class Laser():
+    def __init__(self, x, y, dir, dal):
+        self.rect = pygame.Rect(x-5, y, 10, 75)
+        self.dir = dir
+        self.dal = dal
 class Player():
     def __init__(self,rect,img):
         self.rect = rect
@@ -73,7 +83,7 @@ class Player():
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
 skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft"]
-games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig"]
+games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig", "Knockout"]
 current_skin = "Monkey"
 game_mode = False
 startplayer = []
@@ -162,13 +172,13 @@ while True:
     can = True
     for i in startplayer:
         i.img = pygame.image.load(f"{current_skin}{startplayer.index(i)+1}.png").convert_alpha()
-    while game_mode == "MT" or game_mode == "Flappy Bird" or game_mode == "Greedy Pig":
+    while game_mode == "MT" or game_mode == "Flappy Bird" or game_mode == "Greedy Pig" or game_mode == "Knockout":
         window("black")
         draw(back_arrow,back_rect)
         if mouse:
-                if back_rect.collidepoint(mousepos):
-                    opening = True
-                    game_mode = False
+            if back_rect.collidepoint(mousepos):
+                opening = True
+                game_mode = False
         canstart = 0
         if game_mode == "MT" or game_mode == "Greedy Pig":
             text(f"Win Points: {winpoints}", w_canvas/2, 50, 200, "white")
@@ -191,6 +201,8 @@ while True:
                     if mouse:
                         if pygame.Rect(w_canvas*i/6-100,h_canvas-150,100,100).collidepoint(mousepos):
                             winpoints = i*50
+            cnastart = 2
+        elif game_mode == "Knockout":
             cnastart = 2
         else:
             cnastart = 1
@@ -229,6 +241,9 @@ while True:
         for player in players:
             player.rect.x = ((players.index(player))+1)*w_canvas/(len(players)+1)-50
             player.rect.y = h_canvas-350
+            player.m = 1
+            player.v = 10
+            player.is_jump = False
         while running:
             window(False)
             canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
@@ -544,3 +559,115 @@ while True:
                             break
                     pygame.display.update()
                     clock.tick(60)
+    if game_mode == "Knockout":
+        pausing = False
+        teams = players.copy()
+        shuffle(teams)
+        team_1 = []
+        team_2 = []
+        lasers = []
+        for player in range(len(teams)//2):
+            team_1.append(teams[0])
+            teams.remove(teams[0])
+        team_2 = teams
+        for player in team_1:
+            player.rect.x = ((team_1.index(player))+1)*w_canvas/(len(team_1)+1)-50
+            player.rect.y = 0
+            player.v = 0
+            player.m = 3
+        for player in team_2:
+            player.rect.x = ((team_2.index(player))+1)*w_canvas/(len(team_2)+1)-50
+            player.rect.y = h_canvas-150
+            player.v = 0
+            player.m = 3
+        while game_mode == "Knockout":
+            window("darkgreen")
+            pygame.draw.rect(canvas, "black", (0,150,w_canvas,h_canvas-300))
+            controls = [[keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d]],[keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l]],[keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b]],[keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]],[keys[pygame.K_2], keys[pygame.K_1], keys[pygame.K_3]],[keys[pygame.K_5], keys[pygame.K_4], keys[pygame.K_6]],[keys[pygame.K_8], keys[pygame.K_7], keys[pygame.K_9]],[keys[pygame.K_MINUS], keys[pygame.K_0], keys[pygame.K_EQUALS]]]
+            for player in players:
+                player.movement(controls[startplayer.index(player)])
+                player.v += 1
+                if player.m <= 0:
+                    players.remove(player)
+                for laser in lasers:
+                    if pygame.Rect.colliderect(laser.rect, player.rect):
+                        lasers.remove(laser)
+                        player.m -= 1
+                if player.rect.centerx < 0:
+                    player.rect.x = w_canvas - 75
+                elif player.rect.centerx > w_canvas:
+                    player.rect.x = -75
+                draw(player.img, player.rect)
+            for player in team_1:
+                if player.is_jump and player.v > 60:
+                    lasers.append(Laser(player.rect.centerx, player.rect.bottom, 1, w_canvas))
+                    player.v = 0
+                else:
+                    player.is_jump = False
+                if player.m <= 0:
+                    team_1.remove(player)
+                pygame.draw.rect(canvas, "red", (player.rect.x, player.rect.bottom, 150*player.m/3,20))
+                pygame.draw.rect(canvas, "white", (player.rect.x, player.rect.bottom, 150,20), width=5)
+            for player in team_2:
+                if player.is_jump and player.v > 60:
+                    lasers.append(Laser(player.rect.centerx, player.rect.y-75, -1, w_canvas))
+                    player.v = 0
+                else:
+                    player.is_jump = False
+                if player.m <= 0:
+                    team_2.remove(player)
+                pygame.draw.rect(canvas, "red", (player.rect.x, player.rect.y-20, 150*player.m/3,20))
+                pygame.draw.rect(canvas, "white", (player.rect.x, player.rect.y-20, 150,20), width=5)
+            if not len(team_1):
+                gamecard = True
+                winner = 1
+                break
+            elif not len(team_2):
+                gamecard = True
+                winner = 2
+                break
+            for laser in lasers:
+                laser.rect.y += 20*laser.dir
+                pygame.draw.rect(canvas, "red", laser.rect)
+                if not -100 < laser.rect.y < w_canvas:
+                    lasers.remove(laser)
+            if keys[pygame.K_SPACE]: 
+                if can:
+                    pausing = True
+                    can = False
+            else: can = True
+            while pausing:
+                window(False)
+                pygame.draw.rect(canvas, "black", (w_canvas/2-300, h_canvas/2-300, 600, 600))
+                pygame.draw.rect(canvas, "white", (w_canvas/2-150, h_canvas/2-200, 100, 400))
+                pygame.draw.rect(canvas, "white", (w_canvas/2+50, h_canvas/2-200, 100, 400))
+                draw(back_arrow, back_rect)
+                if mouse:
+                    if back_rect.collidepoint(mousepos):
+                        opening = True
+                        game_mode = False
+                        pausing = False
+                if keys[pygame.K_SPACE]: 
+                    if can:
+                        pausing = False
+                        can = False
+                else: can = True
+                pygame.display.update()
+                clock.tick(60)
+            pygame.display.update()
+            clock.tick(60)
+        while gamecard:
+            window(False)
+            pygame.draw.rect(canvas, "brown", (w_canvas/2 -300, h_canvas/2 -250, 600, 600))
+            text(f"Winner:", w_canvas/2, h_canvas/2 -225, 100, "black", "jungleadventurer")
+            text(f"Team {winner}", w_canvas/2, h_canvas/2 -125, 100, "black", "jungleadventurer")
+            text("Play again?", w_canvas/2, h_canvas/2 -25, 100, "black", "jungleadventurer")
+            play_rect = pygame.Rect(w_canvas/2 -125, h_canvas/2 +75, 250, 250)
+            pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2 + 200),(w_canvas/2 - 100, h_canvas/2 +100),(w_canvas/2 - 100, h_canvas/2 + 300)])
+            pygame.draw.rect(canvas, "black", play_rect, width=5)
+            draw(back_arrow, back_rect)
+            if mouse or keys[pygame.K_RETURN]:
+                if play_rect.collidepoint(mousepos) or back_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
+                    gamecard = False
+            pygame.display.update()
+            clock.tick(60)
