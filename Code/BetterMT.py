@@ -82,7 +82,7 @@ class Player():
             self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
-skins = ["Monkey", "Frog", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math"]
+skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math"]
 games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig", "Knockout"]
 current_skin = "Monkey"
 game_mode = False
