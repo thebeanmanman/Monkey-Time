@@ -82,7 +82,7 @@ class Player():
             self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
-skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math"]
+skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math", "Letters", "Emoji"]
 games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig", "Knockout"]
 current_skin = "Monkey"
 game_mode = False
@@ -127,6 +127,7 @@ while True:
         if mouse:
             if skin_rect.collidepoint(mousepos):
                 skin_selection = True
+                page_scroll = 0
             if game_rect.collidepoint(mousepos):
                 game_selection = True
         while skin_selection:
@@ -136,7 +137,7 @@ while True:
                 if back_rect.collidepoint(mousepos):
                     skin_selection = False
             for skin in skins:
-                skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+200*int(skins.index(skin)/4),150,150)
+                skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+200*int(skins.index(skin)/4)-page_scroll,150,150)
                 text(skin, skin_rect.centerx, skin_rect.y+160, 50, "white", shadow=True)
                 if skin == current_skin:
                     pygame.draw.rect(canvas, "green", skin_rect)
@@ -147,6 +148,12 @@ while True:
                     if skin_rect.collidepoint(mousepos):
                         current_skin = skin
             text("Skin Selection", w_canvas/2, 50, 200, "white", shadow=True)
+            if page_scroll < 410+150*int(len(skins)/4)-h_canvas/5*4:
+                if keys[pygame.K_DOWN]:
+                    page_scroll += 10
+            if page_scroll > 0:
+                if keys[pygame.K_UP]:
+                    page_scroll -= 10
             pygame.display.update()
             clock.tick(60)
         while game_selection:
