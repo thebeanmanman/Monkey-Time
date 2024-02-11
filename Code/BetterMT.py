@@ -82,7 +82,7 @@ class Player():
             self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
-skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math", "Letters", "Emoji"]
+skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math", "Letters", "Emoji", "Soccer"]
 games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig", "Knockout"]
 current_skin = "Monkey"
 game_mode = False
@@ -391,7 +391,7 @@ while True:
                 pygame.draw.rect(canvas, "green", (w_canvas-100, 0, 100, 100))
                 text("#", w_canvas-50, -20, 200, "black")
                 pygame.draw.rect(canvas, "red", (w_canvas-100, h_canvas-100, 100, 100))
-                text(f"{opp%2+1}", w_canvas-50, h_canvas-100, 200, "black")
+                draw(pygame.image.load(f"{opp%2+1} player.png"), (w_canvas-100, h_canvas-100, 100, 100))
                 text(str(scores[0]), 150, h_canvas/2+200, 200, "black")
                 canvas.blit(pygame.image.load(f"{current_skin}1.png"),(75, h_canvas/2,0,0))
                 text(str(scores[1]), w_canvas-150, h_canvas/2+200, 200, "black")
