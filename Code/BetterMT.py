@@ -453,7 +453,7 @@ while True:
                 if len(players) == 1:
                     winner = startplayer.index(player)+1
             if not len(players):
-                gamecard = True
+                game_card = True
                 break
             text(str(int(score)), w_canvas/2, 50, 200, "black", "jungleadventurer")
             pipetimer += 1
@@ -481,7 +481,7 @@ while True:
                 clock.tick(60)
             pygame.display.update()
             clock.tick(60)
-        while gamecard:
+        while game_card:
             window(False)
             pygame.draw.rect(canvas, "brown", (w_canvas/2 -300, h_canvas/2 -250, 600, 600))
             text(f"Your Score: {int(score)}", w_canvas/2, h_canvas/2 -225, 100, "black", "jungleadventurer")
@@ -493,7 +493,7 @@ while True:
             draw(back_arrow, back_rect)
             if mouse or keys[pygame.K_RETURN]:
                 if play_rect.collidepoint(mousepos) or back_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    gamecard = False
+                    game_card = False
             pygame.display.update()
             clock.tick(60)
     if game_mode == "Greedy Pig":
@@ -568,15 +568,21 @@ while True:
                     clock.tick(60)
     if game_mode == "Knockout":
         pausing = False
+        game_card = False
         teams = players.copy()
         shuffle(teams)
         team_1 = []
         team_2 = []
         lasers = []
-        for player in range(len(teams)//2):
-            team_1.append(teams[0])
-            teams.remove(teams[0])
-        team_2 = teams
+        turn = 0
+        for player in range(len(teams)):
+            opp = randint(0,len(teams)-1)
+            if turn%2:
+                team_1.append(teams[opp])
+            else:
+                team_2.append(teams[opp])
+            turn += 1
+            teams.remove(teams[opp])
         for player in team_1:
             player.rect.x = ((team_1.index(player))+1)*w_canvas/(len(team_1)+1)-50
             player.rect.y = 0
@@ -626,11 +632,11 @@ while True:
                 pygame.draw.rect(canvas, "red", (player.rect.x, player.rect.y-20, 150*player.m/3,20))
                 pygame.draw.rect(canvas, "white", (player.rect.x, player.rect.y-20, 150,20), width=5)
             if not len(team_1):
-                gamecard = True
+                game_card = True
                 winner = 1
                 break
             elif not len(team_2):
-                gamecard = True
+                game_card = True
                 winner = 2
                 break
             for laser in lasers:
@@ -663,7 +669,7 @@ while True:
                 clock.tick(60)
             pygame.display.update()
             clock.tick(60)
-        while gamecard:
+        while game_card:
             window(False)
             pygame.draw.rect(canvas, "brown", (w_canvas/2 -300, h_canvas/2 -250, 600, 600))
             text(f"Winner:", w_canvas/2, h_canvas/2 -225, 100, "black", "jungleadventurer")
@@ -675,6 +681,6 @@ while True:
             draw(back_arrow, back_rect)
             if mouse or keys[pygame.K_RETURN]:
                 if play_rect.collidepoint(mousepos) or back_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
-                    gamecard = False
+                    game_card = False
             pygame.display.update()
             clock.tick(60)
