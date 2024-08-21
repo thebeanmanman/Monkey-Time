@@ -54,6 +54,33 @@ def check(x):
                                 return x
                     if ac_win == 3 or dw_win == 3:
                         return x
+def check4(x, winc):
+    for row in range(len(board)):
+        ac_win = 0
+        dw_win = 0
+        for column in range(len(board)):
+            if board[row][column] == x:
+                ac_win += 1
+            else:
+                ac_win = 0
+            if board[column][row] == x:
+                dw_win += 1
+            else:
+                dw_win = 0
+            if ac_win >= winc or dw_win >= winc:
+                return x
+            
+            if True:
+                for i in range(-1,2,2):
+                    di_win = 0
+                    try:
+                        for r in range(len(board)):
+                            if board[row-r-(1*(bool(i-1)))][column-r*i] == x:
+                                di_win += 1
+                        if di_win >= winc:
+                            return x
+                    except IndexError:
+                        pass
 class Pipe():
     def __init__(self, h, y):
         self.rect = pygame.Rect(w_canvas, y, 75, h)
@@ -83,7 +110,7 @@ class Player():
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
 skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math", "Letters", "Emoji", "Soccer"]
-games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig", "Knockout"]
+games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig", "Knockout", "Connect 4"]
 current_skin = "Monkey"
 game_mode = False
 startplayer = []
@@ -684,3 +711,82 @@ while True:
                     game_card = False
             pygame.display.update()
             clock.tick(60)
+    if game_mode == "Connect 4":
+        opp = 1
+        scores = [0,0]
+        while game_mode == "Connect 4":
+            window("white")
+            pygame.draw.rect(canvas, "blue", (w_canvas/2-h_canvas/2,0,h_canvas,h_canvas))
+            board = []
+            for i in range(7):
+                sb = []
+                for ii in range(7):
+                    sb.append("")
+                board.append(sb)
+            turn = randint(0,1)
+            can = False
+            while True:
+                window(False)
+                for i in range(1,len(board)):
+                    pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2,h_canvas/7*i-(h_canvas/36.8)/2,h_canvas,h_canvas/36.8))
+                    pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2+h_canvas/7*i-(h_canvas/36.8)/2,0,h_canvas/36.8,h_canvas))
+                available = 0
+                for row in range(len(board)):
+                    for column in range(len(board)):
+                        if board[row][column]:
+                            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin}{board[row][column]}.png").convert_alpha(), (h_canvas/7, h_canvas/7)), (w_canvas/2-h_canvas/2+row*h_canvas/7, column*h_canvas/7))
+                    if mouse or (not opp%2 and not turn%2):
+                        if pygame.Rect(w_canvas/2-h_canvas/2+row*h_canvas/7, 0, h_canvas/7, h_canvas).collidepoint(mousepos) or (not opp%2 and not turn%2):
+                            if can:
+                                for i in range(len(board)):
+                                    if not board[row][-i-1]:
+                                        if turn%2 or opp%2:
+                                            board[row][-i-1] = str(turn%2 + 1)
+                                            turn += 1    
+                                            allow = False
+                                        elif allow:
+                                            while True:
+                                                row = randint(0,len(board)-1)
+                                                csn = False
+                                                for i in range(len(board)):
+                                                    if not board[row][-i-1]:
+                                                        board[row][-i-1] = str(turn%2 + 1)
+                                                        turn += 1
+                                                        csn = True
+                                                        break
+                                                if csn:
+                                                    break
+                                        break
+                        if board[row][column]:
+                            available += 1
+                if mouse:
+                    if pygame.Rect(w_canvas-100, 0, 100, 100).collidepoint(mousepos) and can:
+                        break 
+                    if pygame.Rect(w_canvas-100, h_canvas-100, 100, 100).collidepoint(mousepos) and can:
+                        opp += 1 
+                    can = False
+                else:
+                    can = True
+                pygame.draw.rect(canvas, "green", (w_canvas-100, 0, 100, 100))
+                text("#", w_canvas-50, -20, 200, "black")
+                pygame.draw.rect(canvas, "red", (w_canvas-100, h_canvas-100, 100, 100))
+                draw(back_arrow, back_rect)
+                if mouse:
+                    if back_rect.collidepoint(mousepos):
+                        opening = True
+                        game_mode = False
+                        break
+                text(f"{opp%2+1}", w_canvas-50, h_canvas-100, 200, "black")
+                text(str(scores[0]), 150, h_canvas/2+200, 200, "black")
+                canvas.blit(pygame.image.load(f"{current_skin}1.png"),(75, h_canvas/2,0,0))
+                text(str(scores[1]), w_canvas-150, h_canvas/2+200, 200, "black")
+                canvas.blit(pygame.image.load(f"{current_skin}2.png"),(w_canvas-225, h_canvas/2,0,0))
+                winner = check4(str((turn-1)%2+1), 4)
+                allow = True
+                if winner:
+                    scores[int(winner)-1] += 1
+                    break
+                elif available == 49:
+                    break
+                pygame.display.update()
+                clock.tick(60)
