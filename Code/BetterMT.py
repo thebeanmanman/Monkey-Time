@@ -1,5 +1,5 @@
 import pygame
-from random import randint, shuffle
+from random import randint, shuffle, choice
 pygame.init()
 canvas = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) 
 canvas_rect = canvas.get_rect()
@@ -114,20 +114,22 @@ games = ["Tic Tac Toe", "Flappy Bird", "Greedy Pig", "Knockout", "Connect 4"]
 current_skin = "Monkey"
 game_mode = False
 startplayer = []
+cards = ["A",2,3,4,5,6,7,8,9,10,"J","Q","K"]
+suits = ["clubs","diamonds","hearts","spades"]
 for i in range(8):
-    startplayer.append(Player(pygame.Rect(0,0,150,150), f"{current_skin}{i+1}.png"))
+    startplayer.append(Player(pygame.Rect(0,0,150,150), f"MT skins/{current_skin}{i+1}.png"))
 class Banana():
     def __init__(self,brandom,pos):
         self.rect = pygame.Rect(pos,0,150,150)
         if brandom == 1:
             self.value = 5
-            self.img = pygame.image.load(f"{current_skin} green.png").convert_alpha()
+            self.img = pygame.image.load(f"MT skins/{current_skin} green.png").convert_alpha()
         elif brandom <= 3:
             self.value = -3
-            self.img = pygame.image.load(f"{current_skin} brown.png").convert_alpha()
+            self.img = pygame.image.load(f"MT skins/{current_skin} brown.png").convert_alpha()
         else:
             self.value = 1
-            self.img = pygame.image.load(f"{current_skin} yellow.png").convert_alpha()
+            self.img = pygame.image.load(f"MT skins/{current_skin} yellow.png").convert_alpha()
 opening = True
 skin_selection = False
 game_selection = False
@@ -157,6 +159,7 @@ while True:
                 page_scroll = 0
             if game_rect.collidepoint(mousepos):
                 game_selection = True
+        can = False
         while skin_selection:
             window("blue")
             draw(back_arrow,back_rect)
@@ -170,10 +173,13 @@ while True:
                     pygame.draw.rect(canvas, "green", skin_rect)
                 else:
                     pygame.draw.rect(canvas, "orange", skin_rect)
-                draw(pygame.image.load(f"{skin}1.png").convert_alpha(), skin_rect)
+                draw(pygame.image.load(f"MT skins/{skin}1.png").convert_alpha(), skin_rect)
                 if mouse:
-                    if skin_rect.collidepoint(mousepos):
+                    if skin_rect.collidepoint(mousepos) and can:
                         current_skin = skin
+                        can = False
+                else:
+                    can = True
             text("Skin Selection", w_canvas/2, 50, 200, "white", shadow=True)
             if page_scroll < 410+150*int(len(skins)/4)-h_canvas/5*4:
                 if keys[pygame.K_DOWN]:
@@ -192,12 +198,13 @@ while True:
             for game in games:
                 game_rect = pygame.Rect(w_canvas/5*(((games.index(game))%4)+1)-75,250+200*int(games.index(game)/4),150,150)
                 text(game, game_rect.centerx, game_rect.y+160, 50, "white", shadow=True)
-                draw(pygame.image.load(f"{game} icon.png").convert_alpha(), game_rect)
+                draw(pygame.image.load(f"MT icons/{game} icon.png").convert_alpha(), game_rect)
                 if mouse:
-                    if game_rect.collidepoint(mousepos):
+                    if game_rect.collidepoint(mousepos) and can:
                         game_mode = game
                         game_selection = False
                         opening = False
+                else: can = True
             text("Game Selection", w_canvas/2, 50, 200, "white", shadow=True)
             pygame.display.update()
             clock.tick(60)
@@ -205,7 +212,7 @@ while True:
         clock.tick(60)
     can = True
     for i in startplayer:
-        i.img = pygame.image.load(f"{current_skin}{startplayer.index(i)+1}.png").convert_alpha()
+        i.img = pygame.image.load(f"MT skins/{current_skin}{startplayer.index(i)+1}.png").convert_alpha()
     while game_mode == "MT" or game_mode == "Flappy Bird" or game_mode == "Greedy Pig" or game_mode == "Knockout":
         window("black")
         draw(back_arrow,back_rect)
@@ -221,7 +228,7 @@ while True:
                 if i == 5:
                     if winpoints%50:
                         pygame.draw.rect(canvas, "green", (w_canvas*i/6-100,h_canvas-150,100,100))
-                    canvas.blit(pygame.transform.scale(pygame.image.load("dice.png").convert_alpha(), (100, 100)), (w_canvas*i/6-100,h_canvas-150))
+                    canvas.blit(pygame.transform.scale(pygame.image.load("MT die/dice.png").convert_alpha(), (100, 100)), (w_canvas*i/6-100,h_canvas-150))
                     if mouse:
                         if pygame.Rect(w_canvas*i/6-100,h_canvas-150,100,100).collidepoint(mousepos) and can:
                             winpoints = randint(50,200)
@@ -280,8 +287,8 @@ while True:
             player.is_jump = False
         while running:
             window(False)
-            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
-            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
+            canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
+            canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
             pygame.draw.rect(canvas, "black", (0,0,w_canvas,150))
             text(f"Goal: {winpoints}", w_canvas/2, 50, 100, "white")
             if len(bananas) < 5:
@@ -386,7 +393,7 @@ while True:
                 for row in range(len(board)):
                     for column in range(len(board)):
                         if board[row][column]:
-                            canvas.blit(pygame.image.load(f"{current_skin}{board[row][column]}.png"),(w_canvas/2-h_canvas/2+row*h_canvas/3+75, column*h_canvas/3+75, h_canvas/3, h_canvas/3))
+                            canvas.blit(pygame.image.load(f"MT skins/{current_skin}{board[row][column]}.png"),(w_canvas/2-h_canvas/2+row*h_canvas/3+75, column*h_canvas/3+75, h_canvas/3, h_canvas/3))
                         if mouse or (not opp%2 and not turn%2):
                             if pygame.Rect(w_canvas/2-h_canvas/2+row*h_canvas/3, column*h_canvas/3, h_canvas/3, h_canvas/3).collidepoint(mousepos) or (not opp%2 and not turn%2):
                                 if not board[row][column] and can:
@@ -420,9 +427,9 @@ while True:
                 pygame.draw.rect(canvas, "red", (w_canvas-100, h_canvas-100, 100, 100))
                 draw(pygame.image.load(f"{opp%2+1} player.png"), (w_canvas-100, h_canvas-100, 100, 100))
                 text(str(scores[0]), 150, h_canvas/2+200, 200, "black")
-                canvas.blit(pygame.image.load(f"{current_skin}1.png"),(75, h_canvas/2,0,0))
+                canvas.blit(pygame.image.load(f"MT skins/{current_skin}1.png"),(75, h_canvas/2,0,0))
                 text(str(scores[1]), w_canvas-150, h_canvas/2+200, 200, "black")
-                canvas.blit(pygame.image.load(f"{current_skin}2.png"),(w_canvas-225, h_canvas/2,0,0))
+                canvas.blit(pygame.image.load(f"MT skins/{current_skin}2.png"),(w_canvas-225, h_canvas/2,0,0))
                 winner = check(str((turn-1)%2+1))
                 allow = True
                 if winner:
@@ -444,8 +451,8 @@ while True:
             player.v = 7
         while game_mode == "Flappy Bird":
             window(False)
-            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
-            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
+            canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
+            canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
             controls = [[keys[pygame.K_w], False, False],[keys[pygame.K_i], False, False],[keys[pygame.K_g], False, False],[keys[pygame.K_UP], False, False],[keys[pygame.K_2], False, False],[keys[pygame.K_5], False, False],[keys[pygame.K_8], False, False],[keys[pygame.K_MINUS], False, False]]
             for pipe in pipes:
                 pipe.rect.x -= 5
@@ -541,14 +548,14 @@ while True:
                         draw(player.img, player.rect)
                         text(str(scores[players.index(player)]), 300, ((players.index(player))+1)*h_canvas/(len(players)+1), 100, "black")
                         if player == a_player:
-                            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin}{startplayer.index(player)+1}.png").convert_alpha(), (400, 400)), (w_canvas-400,h_canvas/2 -150))
+                            canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin}{startplayer.index(player)+1}.png").convert_alpha(), (400, 400)), (w_canvas-400,h_canvas/2 -150))
                     endrect = pygame.Rect(w_canvas/2+50, h_canvas-150, 300, 150)
                     pygame.draw.rect(canvas, "red", endrect)
                     text("End Turn", endrect.centerx, endrect.centery-25, 100, "black")
-                    canvas.blit(pygame.transform.scale(pygame.image.load("dice.png").convert_alpha(), (150, 150)), (w_canvas/2-200,h_canvas-150))
+                    canvas.blit(pygame.transform.scale(pygame.image.load("MT die/dice.png").convert_alpha(), (150, 150)), (w_canvas/2-200,h_canvas-150))
                     draw(back_arrow, back_rect)
                     if roll:
-                        draw(pygame.image.load(f"Dice{roll}.png"), pygame.Rect(w_canvas/2-112.5,h_canvas/2-112.5,225,225))
+                        draw(pygame.image.load(f"MT die/Dice{roll}.png"), pygame.Rect(w_canvas/2-112.5,h_canvas/2-112.5,225,225))
                     if mouse:
                         if endrect.collidepoint(mousepos) and can:
                             scores[players.index(a_player)] += a_num
@@ -574,12 +581,12 @@ while True:
             if max(scores) >= winpoints:
                 while True:
                     window(False)
-                    canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} sky.jpg").convert_alpha(), (w_canvas*2/3, h_canvas*2/3)), (w_canvas/6,h_canvas/6))
-                    canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin} grass.jpg").convert_alpha(), (w_canvas*2/3, 250*2/3)), (w_canvas/6,(h_canvas)*2/3))
+                    canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas*2/3, h_canvas*2/3)), (w_canvas/6,h_canvas/6))
+                    canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas*2/3, 250*2/3)), (w_canvas/6,(h_canvas)*2/3))
                     text("Winner:", w_canvas/2, 40, 200, "black") 
                     text("Play again?", w_canvas/2, 160, 100, "black") 
                     draw(back_arrow, back_rect)
-                    canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin}{startplayer.index(players[scores.index(max(scores))])+1}.png").convert_alpha(), (400, 400)), (w_canvas/2-200,h_canvas/2-200))
+                    canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin}{startplayer.index(players[scores.index(max(scores))])+1}.png").convert_alpha(), (400, 400)), (w_canvas/2-200,h_canvas/2-200))
                     if mouse:
                         if pygame.Rect(w_canvas/2-200,h_canvas/2-200,400,400).collidepoint(mousepos):
                             shuffle(players)
@@ -734,7 +741,7 @@ while True:
                 for row in range(len(board)):
                     for column in range(len(board)):
                         if board[row][column]:
-                            canvas.blit(pygame.transform.scale(pygame.image.load(f"{current_skin}{board[row][column]}.png").convert_alpha(), (h_canvas/7, h_canvas/7)), (w_canvas/2-h_canvas/2+row*h_canvas/7, column*h_canvas/7))
+                            canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin}{board[row][column]}.png").convert_alpha(), (h_canvas/7, h_canvas/7)), (w_canvas/2-h_canvas/2+row*h_canvas/7, column*h_canvas/7))
                     if mouse or (not opp%2 and not turn%2):
                         if pygame.Rect(w_canvas/2-h_canvas/2+row*h_canvas/7, 0, h_canvas/7, h_canvas).collidepoint(mousepos) or (not opp%2 and not turn%2):
                             if can:
@@ -778,9 +785,9 @@ while True:
                         break
                 text(f"{opp%2+1}", w_canvas-50, h_canvas-100, 200, "black")
                 text(str(scores[0]), 150, h_canvas/2+200, 200, "black")
-                canvas.blit(pygame.image.load(f"{current_skin}1.png"),(75, h_canvas/2,0,0))
+                canvas.blit(pygame.image.load(f"MT skins/{current_skin}1.png"),(75, h_canvas/2,0,0))
                 text(str(scores[1]), w_canvas-150, h_canvas/2+200, 200, "black")
-                canvas.blit(pygame.image.load(f"{current_skin}2.png"),(w_canvas-225, h_canvas/2,0,0))
+                canvas.blit(pygame.image.load(f"MT skins/{current_skin}2.png"),(w_canvas-225, h_canvas/2,0,0))
                 winner = check4(str((turn-1)%2+1), 4)
                 allow = True
                 if winner:
