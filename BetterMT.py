@@ -37,8 +37,8 @@ def window(background):
                 down_track = True
             if event.button == 5:
                 up_track = True
-    if keys[pygame.K_DOWN] or down_track: page_scroll += 10
-    if keys[pygame.K_UP] or up_track: page_scroll -= 10
+    if keys[pygame.K_DOWN] or up_track: page_scroll += 10
+    if keys[pygame.K_UP] or down_track: page_scroll -= 10
     if page_scroll < 0: page_scroll = 0
 window(False)
 def draw(img, rect):
@@ -158,6 +158,7 @@ class Banana():
 opening = True
 skin_selection = False
 game_selection = False
+info_selection = False
 running = False
 winsc = False
 winpoints = 100
@@ -174,6 +175,8 @@ while True:
         draw(pygame.image.load("gameicon.png"), game_rect)
         skin_rect = pygame.Rect(w_canvas-300, h_canvas-300, 150, 150)
         draw(pygame.image.load("skin.png").convert_alpha(), skin_rect)
+        info_rect = pygame.Rect(w_canvas/2+250, h_canvas/2-75, 150, 150)
+        draw(pygame.image.load("infoicon.png"), info_rect)
         if mouse or keys[pygame.K_RETURN]:
             if play_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                 opening = False
@@ -184,6 +187,9 @@ while True:
                 page_scroll = 0
             if game_rect.collidepoint(mousepos):
                 game_selection = True
+                page_scroll = 0
+            if info_rect.collidepoint(mousepos):
+                info_selection = True
                 page_scroll = 0
         can = False
         while skin_selection:
@@ -207,6 +213,7 @@ while True:
                 else:
                     can = True
             text("Skin Selection", w_canvas/2, 50, 200, "white", shadow=True)
+            text(str(current_skin), w_canvas/2, 175, 50, "white", shadow=True)
             pygame.display.update()
             clock.tick(60)
         while game_selection:
@@ -226,6 +233,15 @@ while True:
                         opening = False
                 else: can = True
             text("Game Selection", w_canvas/2, 50, 200, "white", shadow=True)
+            pygame.display.update()
+            clock.tick(60)
+        while info_selection:
+            window("blue")
+            text("Information", w_canvas/2, 50-page_scroll, 200, "white", shadow=True)
+            draw(back_arrow,back_rect)
+            if mouse:
+                if back_rect.collidepoint(mousepos):
+                    info_selection = False
             pygame.display.update()
             clock.tick(60)
         pygame.display.update()
@@ -643,11 +659,13 @@ while True:
             player.rect.y = 0
             player.v = 0
             player.m = 3
+            player.points = 0
         for player in team_2:
             player.rect.x = ((team_2.index(player))+1)*w_canvas/(len(team_2)+1)-50
             player.rect.y = h_canvas-150
             player.v = 0
             player.m = 3
+            player.points = 0
         while game_mode == "Knockout":
             window("darkgreen")
             pygame.draw.rect(canvas, "black", (0,150,w_canvas,h_canvas-300))
@@ -820,13 +838,14 @@ while True:
                 clock.tick(60)
     if game_mode == "Black Jack":
         shuffle(players)
+        score = []
         for player in players:
             player.points = []
-            if len(deck) <= len(players):
+            if len(deck) <= 2*len(players):
                 deck = []
                 new_deck()
             player.m = False
-            player.points.append(deck.pop(deck.index(choice(deck))))
+            for i in range(2): player.points.append(deck.pop(deck.index(choice(deck))))
             a_score = []
             ap_score = []
         if game_mode == "Black Jack":
@@ -835,10 +854,26 @@ while True:
                 bust = False
                 while not bust:
                     window("dark green")
+                    draw(back_arrow, back_rect)
                     for player in players:
                         player.rect.y = ((players.index(player))+1)*h_canvas/(len(players)+1)-50
                         player.rect.x = 0
                         draw(player.img, player.rect)
+                        scoreee = []
+                        for s in player.points:
+                            if type(s[1]) == int:
+                                scoreee.append(s[1])
+                            elif s[1] in "JQK":
+                                scoreee.append(10)
+                            else:
+                                scoreee.append(11)
+                        while True:
+                            if sum(scoreee) > 21: 
+                                if 11 in scoreee:
+                                    scoreee[scoreee.index(11)] = 1
+                                else: break
+                            else: break
+                        text(str(sum(scoreee)), 275+len(player.points)*54, ((players.index(player))+1)*h_canvas/(len(players)+1)-50, 150, "white")
                         for i in player.points:
                             canvas.blit(pygame.transform.scale(pygame.image.load(f"Playing_cards/{i[0]}_{i[1]}.png"), (108,150)), (150+player.points.index(i)*54,((players.index(player))+1)*h_canvas/(len(players)+1)-50))
                         if player.m:
@@ -847,13 +882,12 @@ while True:
                             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin}{startplayer.index(player)+1}.png").convert_alpha(), (400, 400)), (w_canvas-400,h_canvas/2 -150))
                     endrect = pygame.Rect(w_canvas/2+250, h_canvas-150, 300, 150)
                     canvas.blit(pygame.transform.scale(pygame.image.load(f"Playing_cards/back_{bcards[bcard%2]}.png").convert_alpha(), (150, 211)), (w_canvas/2,h_canvas-211))
-                    draw(back_arrow, back_rect)
                     if roll:
-                        pygame.draw.rect(canvas, "red", endrect)
-                        text("Stand", endrect.centerx, endrect.centery-25, 100, "black")
                         draw(pygame.image.load(f"Playing_cards/{roll[0]}_{roll[1]}.png"), pygame.Rect(w_canvas/2-112.5,h_canvas/2-112.5,225,225))
+                    pygame.draw.rect(canvas, "red", endrect)
+                    text("Stand", endrect.centerx, endrect.centery-25, 100, "black")
                     if mouse:
-                        if endrect.collidepoint(mousepos) and can and roll:
+                        if endrect.collidepoint(mousepos) and can:
                             can = False
                             ap_score.append(a_player)
                             a_score.append(sum(score))
