@@ -123,12 +123,18 @@ class Player():
         self.is_jump = False
         self.cna = True
     def movement(self,moving):
-        if moving[0]:
+        mv = []
+        keys = pygame.key.get_pressed()
+        for key in moving:
+            mv.append(keys[getattr(pygame,'K_'+key)])
+
+        if mv[0]:
             player.is_jump = True
-        if moving[1]:
-            self.rect.x -= (10 + self.points*0.1)
-        if moving[2]:
-            self.rect.x += (10 + self.points*0.1)
+        if len(mv) >1:
+            if mv[1]:
+                self.rect.x -= (10 + self.points*0.1)
+            if mv[2]:
+                self.rect.x += (10 + self.points*0.1)
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
 skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math", "Letters", "Emoji", "Soccer"]
@@ -335,7 +341,7 @@ while True:
                 banana.rect.y += 10
                 if banana.rect.y >= h_canvas:
                     bananas.remove(banana)
-            controls = [[keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d]],[keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l]],[keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b]],[keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]],[keys[pygame.K_2], keys[pygame.K_1], keys[pygame.K_3]],[keys[pygame.K_5], keys[pygame.K_4], keys[pygame.K_6]],[keys[pygame.K_8], keys[pygame.K_7], keys[pygame.K_9]],[keys[pygame.K_MINUS], keys[pygame.K_0], keys[pygame.K_EQUALS]]]
+            controls = [['w','a','d'],['i','j','l'],['g', 'v', 'b'],['UP', 'LEFT', 'RIGHT'],['2', '1', '3'],['5', '4', '6'],['8', '7', '9'],['MINUS', '0', 'EQUALS']]
             for player in players:
                 draw(player.img,player.rect)
                 text(f"Player {startplayer.index(player)+1}: {player.points}", player.rect.centerx, 110, 50, "white")
@@ -490,7 +496,7 @@ while True:
             window(False)
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
-            controls = [[keys[pygame.K_w], False, False],[keys[pygame.K_i], False, False],[keys[pygame.K_g], False, False],[keys[pygame.K_UP], False, False],[keys[pygame.K_2], False, False],[keys[pygame.K_5], False, False],[keys[pygame.K_8], False, False],[keys[pygame.K_MINUS], False, False]]
+            controls = [['w'],['i'],['g'],['UP'],['2'],['5'],['8'],['MINUS']]
             for pipe in pipes:
                 pipe.rect.x -= 5
                 pygame.draw.rect(canvas, "green", pipe.rect)
@@ -669,7 +675,7 @@ while True:
         while game_mode == "Knockout":
             window("darkgreen")
             pygame.draw.rect(canvas, "black", (0,150,w_canvas,h_canvas-300))
-            controls = [[keys[pygame.K_w], keys[pygame.K_a], keys[pygame.K_d]],[keys[pygame.K_i], keys[pygame.K_j], keys[pygame.K_l]],[keys[pygame.K_g], keys[pygame.K_v], keys[pygame.K_b]],[keys[pygame.K_UP], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]],[keys[pygame.K_2], keys[pygame.K_1], keys[pygame.K_3]],[keys[pygame.K_5], keys[pygame.K_4], keys[pygame.K_6]],[keys[pygame.K_8], keys[pygame.K_7], keys[pygame.K_9]],[keys[pygame.K_MINUS], keys[pygame.K_0], keys[pygame.K_EQUALS]]]
+            controls = [['w', 'a', 'd'],['i', 'j', 'l'],['g', 'v', 'b'],['UP', 'LEFT', 'RIGHT'],['2', '1', '3'],['5', '4', '6'],['8', '7', '9'],['MINUS', '0', 'EQUALS']]
             for player in players:
                 player.movement(controls[startplayer.index(player)])
                 player.v += 1
