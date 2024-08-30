@@ -1,5 +1,6 @@
 import pygame
 from random import randint, shuffle, choice
+from string import ascii_lowercase, digits
 pygame.init()
 canvas = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) 
 canvas_rect = canvas.get_rect()
@@ -10,7 +11,7 @@ pygame.display.set_caption("Monkey Time")
 hitbox = 0
 cah = True
 page_scroll = 0
-def window(background):
+def window(background=False):
     global keys, mouse, mousepos, hitbox, cah, page_scroll
     if background: canvas.fill(background)
     keys = pygame.key.get_pressed()
@@ -22,10 +23,6 @@ def window(background):
             hitbox += 1
             cah = False
     else: cah = True
-    if keys[pygame.K_DOWN]:
-        page_scroll += 10
-    if keys[pygame.K_UP]:
-        page_scroll -= 10
     if page_scroll < 0: page_scroll = 0
     up_track = False
     down_track = False
@@ -37,10 +34,10 @@ def window(background):
                 down_track = True
             if event.button == 5:
                 up_track = True
-    if keys[pygame.K_DOWN] or up_track: page_scroll += 10
-    if keys[pygame.K_UP] or down_track: page_scroll -= 10
+    if keys[pygame.K_DOWN] or up_track: page_scroll += 20
+    if keys[pygame.K_UP] or down_track: page_scroll -= 20
     if page_scroll < 0: page_scroll = 0
-window(False)
+window()
 def draw(img, rect):
     canvas.blit(img, rect)
     if hitbox%2: pygame.draw.rect(canvas, "red", rect, width=5)
@@ -155,7 +152,11 @@ bcards = ["light","dark"]
 bcard = 1
 for i in range(8):
     startplayer.append(Player(pygame.Rect(0,0,150,150), f"MT skins/{current_skin}{i+1}.png"))
+pos_controls = ["UP", "DOWN", "LEFT", "RIGHT", "MINUS", "EQUALS", "LEFTBRACKET", "RIGHTBRACKET", "BACKSLASH", "SEMICOLON", "QUOTE", "COMMA", "PERIOD", "SLASH"]
+for _ in ascii_lowercase: pos_controls.append(_)
+for _ in digits: pos_controls.append(_)
 controls = [['w','a','d'],['i','j','l'],['g', 'v', 'b'],['UP', 'LEFT', 'RIGHT'],['2', '1', '3'],['5', '4', '6'],['8', '7', '9'],['MINUS', '0', 'EQUALS']]
+keybrek = False
 class Banana():
     def __init__(self,brandom,pos):
         self.rect = pygame.Rect(pos,0,150,150)
@@ -174,7 +175,7 @@ winsc = False
 winpoints = 100
 while True:
     while opening:
-        window("blue")
+        window(background="blue")
         text("Monkey Time", w_canvas/2, 50, 300, "white", shadow=True)
         text("(But Better)", w_canvas-200, 250, 50, "white",shadow=True)
         play_rect = pygame.Rect(w_canvas/2 -125, h_canvas/2 - 125, 250, 250)
@@ -194,7 +195,7 @@ while True:
                     page_scroll = 0
         can = False
         while open_icons[0].selection:
-            window("blue")
+            window(background="blue")
             draw(back_arrow,back_rect)
             if mouse:
                 if back_rect.collidepoint(mousepos):
@@ -218,7 +219,7 @@ while True:
             pygame.display.update()
             clock.tick(60)
         while open_icons[1].selection:
-            window("blue")
+            window(background="blue")
             draw(back_arrow,back_rect)
             if mouse:
                 if back_rect.collidepoint(mousepos) and can:
@@ -237,8 +238,46 @@ while True:
             pygame.display.update()
             clock.tick(60)
         while open_icons[2].selection:
-            window("blue")
+            window(background="blue")
             text("Settings", w_canvas/2, 50-page_scroll, 200, "white", shadow=True)
+            text("Player:", 175, 200-page_scroll, 100, "white")
+            text("Up:", 450, 200-page_scroll, 100, "white")
+            text("Left:", 825, 200-page_scroll, 100, "white")
+            text("Right:", 1200, 200-page_scroll, 100, "white")
+            for sp in startplayer:
+                text(f"{startplayer.index(sp)+1}", 100, 350+175*startplayer.index(sp)-page_scroll, 100, "white")
+                sprect = pygame.Rect(150, 300+175*startplayer.index(sp)-page_scroll, 150, 150)
+                draw(sp.img, sprect)
+                for i in controls[startplayer.index(sp)]:
+                    letter_rect = pygame.Rect(350+375*controls[startplayer.index(sp)].index(i),300+175*startplayer.index(sp)-page_scroll, 200, 100)
+                    text(f"{i}", 450+375*controls[startplayer.index(sp)].index(i),325+175*startplayer.index(sp)-page_scroll, 100, "white")
+                    if mouse:
+                        if letter_rect.collidepoint(mousepos):
+                            page_scroll = 0
+                            while True:
+                                window(background="blue")
+                                draw(back_arrow, pygame.Rect(0, h_canvas-100, 100, 100))
+                                if mouse:
+                                    if pygame.Rect(0, h_canvas-100, 100, 100).collidepoint(mousepos): break
+                                for l in pos_controls:
+                                    cancor = True
+                                    for contr in controls:
+                                        for c in contr:
+                                            if l == c:  cancor = False
+                                    if cancor:
+                                        text(l, w_canvas/5*(((pos_controls.index(l))%4)+1),50+200*int(pos_controls.index(l)/4)-page_scroll, 50, "white")
+                                        letter_rect = pygame.Rect(w_canvas/5*(((pos_controls.index(l))%4)+1)-150, 25+200*int(pos_controls.index(l)/4)-page_scroll, 300, 100)
+                                        if mouse:
+                                            if letter_rect.collidepoint(mousepos):
+                                                controls[startplayer.index(sp)][controls[startplayer.index(sp)].index(i)] = l
+                                                keybrek = True
+                                                page_scroll = 0
+                                                break
+                                if keybrek:
+                                    keybrek = False
+                                    break
+                                pygame.display.update()
+                                clock.tick(60)
             draw(back_arrow,back_rect)
             if mouse:
                 if back_rect.collidepoint(mousepos):
@@ -246,7 +285,7 @@ while True:
             pygame.display.update()
             clock.tick(60)
         while open_icons[3].selection:
-            window("blue")
+            window(background="blue")
             text("Information", w_canvas/2, 50-page_scroll, 200, "white", shadow=True)
             draw(back_arrow,back_rect)
             if mouse:
@@ -260,7 +299,7 @@ while True:
     for i in startplayer:
         i.img = pygame.image.load(f"MT skins/{current_skin}{startplayer.index(i)+1}.png").convert_alpha()
     while game_mode == "MT" or game_mode == "Flappy Bird" or game_mode == "Greedy Pig" or game_mode == "Knockout" or game_mode == "Black Jack":
-        window("black")
+        window(background="black")
         draw(back_arrow,back_rect)
         if mouse:
             if back_rect.collidepoint(mousepos):
@@ -333,7 +372,7 @@ while True:
             player.is_jump = False
             player.points = 0
         while running:
-            window(False)
+            window()
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
             pygame.draw.rect(canvas, "black", (0,0,w_canvas,150))
@@ -376,7 +415,7 @@ while True:
                         can = False
                 else: can = True
                 while pausing:
-                    window(False)
+                    window()
                     pygame.draw.rect(canvas, "black", (w_canvas/2-300, h_canvas/2-300, 600, 600))
                     pygame.draw.rect(canvas, "white", (w_canvas/2-150, h_canvas/2-200, 100, 400))
                     pygame.draw.rect(canvas, "white", (w_canvas/2+50, h_canvas/2-200, 100, 400))
@@ -400,7 +439,7 @@ while True:
         for startplay in startplayer:
             startplay.points = 0
         while winsc:
-            window("yellow")
+            window(background="yellow")
             nana_rain += 1
             if nana_rain >= 60:
                 bananas.append(Banana(randint(1,10),randint(0,w_canvas-150)))
@@ -424,14 +463,14 @@ while True:
         opp = 1
         scores = [0,0]
         while game_mode == "Tic Tac Toe":
-            window("white")
+            window(background="white")
             draw(back_arrow,back_rect)
             pygame.draw.rect(canvas, "blue", (w_canvas/2-h_canvas/2,0,h_canvas,h_canvas))
             board = [["","",""],["","",""],["","",""]]
             turn = randint(0,1)
             can = False
             while True:
-                window(False)
+                window()
                 for i in range(1,3):
                     pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2,h_canvas/3*i-(h_canvas/18.4)/2,h_canvas,h_canvas/18.4))
                     pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2+h_canvas/3*i-(h_canvas/18.4)/2,0,h_canvas/18.4,h_canvas))
@@ -496,7 +535,7 @@ while True:
             player.cna = True
             player.v = 7
         while game_mode == "Flappy Bird":
-            window(False)
+            window()
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
             for pipe in pipes:
@@ -548,7 +587,7 @@ while True:
                     can = False
             else: can = True
             while pausing:
-                window(False)
+                window()
                 if keys[pygame.K_SPACE]:
                     if can:
                         pausing = False
@@ -561,7 +600,7 @@ while True:
             pygame.display.update()
             clock.tick(60)
         while game_card:
-            window(False)
+            window()
             pygame.draw.rect(canvas, "brown", (w_canvas/2 -300, h_canvas/2 -250, 600, 600))
             text(f"Your Score: {int(score)}", w_canvas/2, h_canvas/2 -225, 100, "black", "jungleadventurer")
             text(f"Player {winner} won", w_canvas/2, h_canvas/2 -125, 100, "black", "jungleadventurer")
@@ -586,7 +625,7 @@ while True:
                 roll = 0
                 a_num = 0
                 while True:
-                    window("white")
+                    window(background="white")
                     for player in players:
                         player.rect.y = ((players.index(player))+1)*h_canvas/(len(players)+1)-50
                         player.rect.x = 100
@@ -625,7 +664,7 @@ while True:
                     clock.tick(60)
             if max(scores) >= winpoints:
                 while True:
-                    window(False)
+                    window()
                     canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas*2/3, h_canvas*2/3)), (w_canvas/6,h_canvas/6))
                     canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas*2/3, 250*2/3)), (w_canvas/6,(h_canvas)*2/3))
                     text("Winner:", w_canvas/2, 40, 200, "black") 
@@ -675,7 +714,7 @@ while True:
             player.m = 3
             player.points = 0
         while game_mode == "Knockout":
-            window("darkgreen")
+            window(background="darkgreen")
             pygame.draw.rect(canvas, "black", (0,150,w_canvas,h_canvas-300))
             for player in players:
                 player.movement(controls[startplayer.index(player)])
@@ -730,7 +769,7 @@ while True:
                     can = False
             else: can = True
             while pausing:
-                window(False)
+                window()
                 pygame.draw.rect(canvas, "black", (w_canvas/2-300, h_canvas/2-300, 600, 600))
                 pygame.draw.rect(canvas, "white", (w_canvas/2-150, h_canvas/2-200, 100, 400))
                 pygame.draw.rect(canvas, "white", (w_canvas/2+50, h_canvas/2-200, 100, 400))
@@ -750,7 +789,7 @@ while True:
             pygame.display.update()
             clock.tick(60)
         while game_card:
-            window(False)
+            window()
             pygame.draw.rect(canvas, "brown", (w_canvas/2 -300, h_canvas/2 -250, 600, 600))
             text(f"Winner:", w_canvas/2, h_canvas/2 -225, 100, "black", "jungleadventurer")
             text(f"Team {winner}", w_canvas/2, h_canvas/2 -125, 100, "black", "jungleadventurer")
@@ -768,7 +807,7 @@ while True:
         opp = 1
         scores = [0,0]
         while game_mode == "Connect 4":
-            window("white")
+            window(background="white")
             pygame.draw.rect(canvas, "blue", (w_canvas/2-h_canvas/2,0,h_canvas,h_canvas))
             board = []
             for i in range(7):
@@ -779,7 +818,7 @@ while True:
             turn = randint(0,1)
             can = False
             while True:
-                window(False)
+                window()
                 for i in range(1,len(board)):
                     pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2,h_canvas/7*i-(h_canvas/36.8)/2,h_canvas,h_canvas/36.8))
                     pygame.draw.rect(canvas, "black", (w_canvas/2-h_canvas/2+h_canvas/7*i-(h_canvas/36.8)/2,0,h_canvas/36.8,h_canvas))
@@ -860,7 +899,7 @@ while True:
                 roll = 0
                 bust = False
                 while not bust:
-                    window("dark green")
+                    window(background="dark green")
                     draw(back_arrow, back_rect)
                     for player in players:
                         player.rect.y = ((players.index(player))+1)*h_canvas/(len(players)+1)-50
@@ -931,7 +970,7 @@ while True:
                     clock.tick(60)
             if len(a_score):
                 while True:
-                    window(False)
+                    window()
                     canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas*2/3, h_canvas*2/3)), (w_canvas/6,h_canvas/6))
                     canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas*2/3, 250*2/3)), (w_canvas/6,(h_canvas)*2/3))
                     text("Winner:", w_canvas/2, 40, 200, "white", shadow=True) 
