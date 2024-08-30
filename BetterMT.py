@@ -127,14 +127,20 @@ class Player():
         keys = pygame.key.get_pressed()
         for key in moving:
             mv.append(keys[getattr(pygame,'K_'+key)])
-
         if mv[0]:
             player.is_jump = True
-        if len(mv) >1:
+        if game_mode not in ["Flappy Bird"]:
             if mv[1]:
                 self.rect.x -= (10 + self.points*0.1)
             if mv[2]:
                 self.rect.x += (10 + self.points*0.1)
+class Opening_icons():
+    def __init__(self, name, pos):
+        self.name = name
+        self.rect = pygame.Rect(pos[0], pos[1], 150, 150)
+        self.img = pygame.image.load(f"{name}icon.png")
+        self.selection = False
+open_icons = [Opening_icons("skin", [w_canvas-300, h_canvas-300]), Opening_icons("game", [w_canvas/2-400, h_canvas/2-75]), Opening_icons("settings", [w_canvas/2+250, h_canvas/2-75]), Opening_icons("info", [225, h_canvas-300])]
 back_arrow = pygame.image.load("Arrow.png").convert_alpha()
 back_rect = pygame.Rect(0,0,100,100)
 skins = ["Monkey", "Frog", "Dog", "Mouse", "Jedi", "Sith", "Avengers", "DC", "Brawl Stars", "HermitCraft", "Math", "Letters", "Emoji", "Soccer"]
@@ -149,6 +155,7 @@ bcards = ["light","dark"]
 bcard = 1
 for i in range(8):
     startplayer.append(Player(pygame.Rect(0,0,150,150), f"MT skins/{current_skin}{i+1}.png"))
+controls = [['w','a','d'],['i','j','l'],['g', 'v', 'b'],['UP', 'LEFT', 'RIGHT'],['2', '1', '3'],['5', '4', '6'],['8', '7', '9'],['MINUS', '0', 'EQUALS']]
 class Banana():
     def __init__(self,brandom,pos):
         self.rect = pygame.Rect(pos,0,150,150)
@@ -162,9 +169,6 @@ class Banana():
             self.value = 1
             self.img = pygame.image.load(f"MT skins/{current_skin} yellow.png").convert_alpha()
 opening = True
-skin_selection = False
-game_selection = False
-info_selection = False
 running = False
 winsc = False
 winpoints = 100
@@ -177,33 +181,24 @@ while True:
         pygame.draw.rect(canvas, "green", play_rect)
         pygame.draw.polygon(canvas, "black",[(w_canvas/2 + 100,h_canvas/2),(w_canvas/2 - 100, h_canvas/2 - 100),(w_canvas/2 - 100, h_canvas/2 + 100)])
         pygame.draw.rect(canvas, "black", play_rect, width=5)
-        game_rect = pygame.Rect(w_canvas/2-400, h_canvas/2-75, 150, 150)
-        draw(pygame.image.load("gameicon.png"), game_rect)
-        skin_rect = pygame.Rect(w_canvas-300, h_canvas-300, 150, 150)
-        draw(pygame.image.load("skin.png").convert_alpha(), skin_rect)
-        info_rect = pygame.Rect(w_canvas/2+250, h_canvas/2-75, 150, 150)
-        draw(pygame.image.load("infoicon.png"), info_rect)
+        for oi in open_icons:
+            draw(oi.img, oi.rect)
         if mouse or keys[pygame.K_RETURN]:
             if play_rect.collidepoint(mousepos) or keys[pygame.K_RETURN]:
                 opening = False
                 game_mode = "MT"
         if mouse:
-            if skin_rect.collidepoint(mousepos):
-                skin_selection = True
-                page_scroll = 0
-            if game_rect.collidepoint(mousepos):
-                game_selection = True
-                page_scroll = 0
-            if info_rect.collidepoint(mousepos):
-                info_selection = True
-                page_scroll = 0
+            for oi in open_icons:
+                if oi.rect.collidepoint(mousepos):
+                    oi.selection = True
+                    page_scroll = 0
         can = False
-        while skin_selection:
+        while open_icons[0].selection:
             window("blue")
             draw(back_arrow,back_rect)
             if mouse:
                 if back_rect.collidepoint(mousepos):
-                    skin_selection = False
+                    open_icons[0].selection = False
             for skin in skins:
                 skin_rect = pygame.Rect(w_canvas/5*(((skins.index(skin))%4)+1)-75,250+200*int(skins.index(skin)/4)-page_scroll,150,150)
                 text(skin, skin_rect.centerx, skin_rect.y+160, 50, "white", shadow=True)
@@ -222,32 +217,41 @@ while True:
             text(str(current_skin), w_canvas/2, 175, 50, "white", shadow=True)
             pygame.display.update()
             clock.tick(60)
-        while game_selection:
+        while open_icons[1].selection:
             window("blue")
             draw(back_arrow,back_rect)
             if mouse:
-                if back_rect.collidepoint(mousepos):
-                    game_selection = False
+                if back_rect.collidepoint(mousepos) and can:
+                    open_icons[1].selection = False
             for game in games:
                 game_rect = pygame.Rect(w_canvas/5*(((games.index(game))%4)+1)-75,250+200*int(games.index(game)/4)-page_scroll,150,150)
                 text(game, game_rect.centerx, game_rect.y+160, 50, "white", shadow=True)
                 draw(pygame.image.load(f"MT icons/{game} icon.png").convert_alpha(), game_rect)
                 if mouse:
-                    if game_rect.collidepoint(mousepos) and can:
+                    if game_rect.collidepoint(mousepos):
                         game_mode = game
-                        game_selection = False
+                        open_icons[1].selection = False
                         opening = False
                 else: can = True
             text("Game Selection", w_canvas/2, 50, 200, "white", shadow=True)
             pygame.display.update()
             clock.tick(60)
-        while info_selection:
+        while open_icons[2].selection:
+            window("blue")
+            text("Settings", w_canvas/2, 50-page_scroll, 200, "white", shadow=True)
+            draw(back_arrow,back_rect)
+            if mouse:
+                if back_rect.collidepoint(mousepos):
+                    open_icons[2].selection = False
+            pygame.display.update()
+            clock.tick(60)
+        while open_icons[3].selection:
             window("blue")
             text("Information", w_canvas/2, 50-page_scroll, 200, "white", shadow=True)
             draw(back_arrow,back_rect)
             if mouse:
                 if back_rect.collidepoint(mousepos):
-                    info_selection = False
+                    open_icons[3].selection = False
             pygame.display.update()
             clock.tick(60)
         pygame.display.update()
@@ -341,7 +345,6 @@ while True:
                 banana.rect.y += 10
                 if banana.rect.y >= h_canvas:
                     bananas.remove(banana)
-            controls = [['w','a','d'],['i','j','l'],['g', 'v', 'b'],['UP', 'LEFT', 'RIGHT'],['2', '1', '3'],['5', '4', '6'],['8', '7', '9'],['MINUS', '0', 'EQUALS']]
             for player in players:
                 draw(player.img,player.rect)
                 text(f"Player {startplayer.index(player)+1}: {player.points}", player.rect.centerx, 110, 50, "white")
@@ -496,7 +499,6 @@ while True:
             window(False)
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} sky.jpg").convert_alpha(), (w_canvas, h_canvas)), (0,0))
             canvas.blit(pygame.transform.scale(pygame.image.load(f"MT skins/{current_skin} grass.jpg").convert_alpha(), (w_canvas, 250)), (0,h_canvas-250))
-            controls = [['w'],['i'],['g'],['UP'],['2'],['5'],['8'],['MINUS']]
             for pipe in pipes:
                 pipe.rect.x -= 5
                 pygame.draw.rect(canvas, "green", pipe.rect)
@@ -515,7 +517,7 @@ while True:
                     players.remove(player)
                 player.rect.clamp_ip(canvas_rect)
                 player.movement(controls[startplayer.index(player)])
-                if controls[startplayer.index(player)][0]:
+                if keys[getattr(pygame,'K_'+controls[startplayer.index(player)][0])]:
                     if player.cna:
                         player.m = 1
                         player.v = 7
@@ -675,7 +677,6 @@ while True:
         while game_mode == "Knockout":
             window("darkgreen")
             pygame.draw.rect(canvas, "black", (0,150,w_canvas,h_canvas-300))
-            controls = [['w', 'a', 'd'],['i', 'j', 'l'],['g', 'v', 'b'],['UP', 'LEFT', 'RIGHT'],['2', '1', '3'],['5', '4', '6'],['8', '7', '9'],['MINUS', '0', 'EQUALS']]
             for player in players:
                 player.movement(controls[startplayer.index(player)])
                 player.v += 1
