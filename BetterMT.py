@@ -240,10 +240,10 @@ while True:
         while open_icons[2].selection:
             window(background="blue")
             text("Settings", w_canvas/2, 50-page_scroll, 200, "white", shadow=True)
-            text("Player:", 175, 200-page_scroll, 100, "white")
-            text("Up:", 450, 200-page_scroll, 100, "white")
-            text("Left:", 825, 200-page_scroll, 100, "white")
-            text("Right:", 1200, 200-page_scroll, 100, "white")
+            text("Player:", 175, 200-page_scroll, 100, "white", shadow=True)
+            dirs = ["Up", "Left", "Right"]
+            for dir in dirs:
+                text(dir, 450+375*dirs.index(dir), 200-page_scroll, 100, "white", shadow=True)
             for sp in startplayer:
                 text(f"{startplayer.index(sp)+1}", 100, 350+175*startplayer.index(sp)-page_scroll, 100, "white")
                 sprect = pygame.Rect(150, 300+175*startplayer.index(sp)-page_scroll, 150, 150)
@@ -257,6 +257,7 @@ while True:
                             while True:
                                 window(background="blue")
                                 draw(back_arrow, pygame.Rect(0, h_canvas-100, 100, 100))
+                                text(f"Player {startplayer.index(sp)+1}: {dirs[controls[startplayer.index(sp)].index(i)]}", w_canvas/2, -page_scroll, 150, "white", shadow=True)
                                 if mouse:
                                     if pygame.Rect(0, h_canvas-100, 100, 100).collidepoint(mousepos): break
                                 for l in pos_controls:
@@ -265,14 +266,16 @@ while True:
                                         for c in contr:
                                             if l == c:  cancor = False
                                     if cancor:
-                                        text(l, w_canvas/5*(((pos_controls.index(l))%4)+1),50+200*int(pos_controls.index(l)/4)-page_scroll, 50, "white")
-                                        letter_rect = pygame.Rect(w_canvas/5*(((pos_controls.index(l))%4)+1)-150, 25+200*int(pos_controls.index(l)/4)-page_scroll, 300, 100)
+                                        text(l, w_canvas/5*(((pos_controls.index(l))%4)+1),150+200*int(pos_controls.index(l)/4)-page_scroll, 50, "white")
+                                        letter_rect = pygame.Rect(w_canvas/5*(((pos_controls.index(l))%4)+1)-50, 25+200*int(pos_controls.index(l)/4)-page_scroll, 100, 100)
                                         if mouse:
                                             if letter_rect.collidepoint(mousepos):
                                                 controls[startplayer.index(sp)][controls[startplayer.index(sp)].index(i)] = l
                                                 keybrek = True
                                                 page_scroll = 0
                                                 break
+                                    else:
+                                        text(l, w_canvas/5*(((pos_controls.index(l))%4)+1),150+200*int(pos_controls.index(l)/4)-page_scroll, 50, "red")
                                 if keybrek:
                                     keybrek = False
                                     break
