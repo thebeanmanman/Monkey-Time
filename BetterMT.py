@@ -267,7 +267,7 @@ while True:
                                             if l == c:  cancor = False
                                     if cancor:
                                         text(l, w_canvas/5*(((pos_controls.index(l))%4)+1),150+200*int(pos_controls.index(l)/4)-page_scroll, 50, "white")
-                                        letter_rect = pygame.Rect(w_canvas/5*(((pos_controls.index(l))%4)+1)-50, 25+200*int(pos_controls.index(l)/4)-page_scroll, 100, 100)
+                                        letter_rect = pygame.Rect(w_canvas/5*(((pos_controls.index(l))%4)+1)-50, 100+200*int(pos_controls.index(l)/4)-page_scroll, 100, 100)
                                         if mouse:
                                             if letter_rect.collidepoint(mousepos):
                                                 controls[startplayer.index(sp)][controls[startplayer.index(sp)].index(i)] = l
